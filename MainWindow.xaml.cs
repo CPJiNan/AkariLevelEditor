@@ -1,6 +1,4 @@
-﻿using System.Windows;
-
-namespace AkariLevelEditor;
+﻿namespace AkariLevelEditor;
 
 public partial class MainWindow : Window
 {

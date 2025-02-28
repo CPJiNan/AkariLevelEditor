@@ -1,0 +1,11 @@
+﻿<Page x:Class="AkariLevelEditor.Pages.HomePage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
+      Height="450" Width="800">
+    <Grid>
+        <ui:Card Margin="8">
+            <ui:Button Content="Hello World" Icon="{ui:SymbolIcon Fluent24}" />
+        </ui:Card>
+    </Grid>
+</Page>

@@ -1,12 +1,38 @@
-﻿<ui:FluentWindow
-    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
-    Title="MainWindow" Height="450" Width="800">
-    <StackPanel>
-        <ui:TitleBar Title="WPF UI" />
-        <ui:Card Margin="8">
-            <ui:Button Content="Hello World" Icon="{ui:SymbolIcon Fluent24}" />
-        </ui:Card>
-    </StackPanel>
+﻿<ui:FluentWindow x:Class="AkariLevelEditor.Window"
+                 xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                 xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                 xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
+                 xmlns:pages="clr-namespace:AkariLevelEditor.Pages"
+                 Title="MainWindow" Height="810" Width="1440">
+    <Grid>
+
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+
+        <ui:TitleBar Title="AkariLevel 可视化编辑器" Grid.Row="0" />
+
+        <ui:NavigationView x:Name="RootNavigation" Grid.Row="1">
+
+            <ui:NavigationView.MenuItems>
+
+                <ui:NavigationViewItem Content="主页" TargetPageType="{x:Type pages:HomePage}">
+                    <ui:NavigationViewItem.Icon>
+                        <ui:SymbolIcon Symbol="Home24" />
+                    </ui:NavigationViewItem.Icon>
+                </ui:NavigationViewItem>
+
+            </ui:NavigationView.MenuItems>
+
+            <ui:NavigationView.FooterMenuItems>
+                <ui:NavigationViewItem Content="设置" TargetPageType="{x:Type pages:SettingsPage}">
+                    <ui:NavigationViewItem.Icon>
+                        <ui:SymbolIcon Symbol="Settings24" />
+                    </ui:NavigationViewItem.Icon>
+                </ui:NavigationViewItem>
+            </ui:NavigationView.FooterMenuItems>
+
+        </ui:NavigationView>
+    </Grid>
 </ui:FluentWindow>
