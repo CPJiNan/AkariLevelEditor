@@ -5,47 +5,48 @@ namespace AkariLevelEditor.Utils;
 
 public class FileUtils
 {
-    public static readonly string RootFolder = AppDomain.CurrentDomain.BaseDirectory;
+    /** 根目录 **/
+    public static string RootFolder => AppDomain.CurrentDomain.BaseDirectory;
 
     /** 获取文件夹内所有文件 **/
     public static List<FileInfo> GetFiles(string dir, bool deep = false)
     {
-        var result = new List<FileInfo>();
-        ForEachFile(dir, deep, result.Add);
-        return result;
+        return GetDirectoryInfo(dir)
+            .EnumerateFiles("*", deep ? SearchOption.AllDirectories : SearchOption.TopDirectoryOnly)
+            .ToList();
     }
 
     /** 获取文件夹内所有文件名称 **/
     public static List<string> GetFileNames(string dir, bool deep = false)
     {
-        var result = new List<string>();
-        ForEachFile(dir, deep, file => result.Add(file.Name));
-        return result;
+        return GetFiles(dir, deep)
+            .Select(f => f.Name)
+            .ToList();
     }
 
     /** 获取文件夹内所有文件名称（不带扩展名） **/
     public static List<string> GetFileNamesWithoutExtensions(string dir, bool deep = false)
     {
-        var result = new List<string>();
-        ForEachFile(dir, deep, file => result.Add(Path.GetFileNameWithoutExtension(file.Name)));
-        return result;
+        return GetFiles(dir, deep)
+            .Select(f => Path.GetFileNameWithoutExtension(f.Name))
+            .ToList();
     }
 
     /** 获取文件夹内文件 (不存在时返回 null) **/
     public static FileInfo? GetFileOrNull(string filePath)
     {
-        var file = new FileInfo(Path.Combine(RootFolder, filePath));
-        return file.Exists ? file : null;
+        return GetFileInfo(filePath) is { Exists: true } file ? file : null;
     }
 
     /** 获取文件夹内文件 (不存在时创建文件) **/
     public static FileInfo GetFileOrCreate(string filePath)
     {
-        var file = new FileInfo(Path.Combine(RootFolder, filePath));
-        if (!file.Exists)
+        var file = GetFileInfo(filePath);
+        if (file.Exists) return file;
+
+        file.Directory?.Create();
+        using (file.Create())
         {
-            file.Directory?.Create();
-            file.Create().Close();
         }
 
         file.Refresh();
@@ -68,35 +69,32 @@ public class FileUtils
     public static void SaveResource(string resourceName, string outPath = "")
     {
         var assembly = Assembly.GetExecutingAssembly();
-
         var fullResourceName = $"{assembly.GetName().Name}.Resources.{resourceName}";
-
         using var stream = assembly.GetManifestResourceStream(fullResourceName);
-        if (stream == null) return;
+        if (stream is null) return;
 
-        var filePath = Path.Combine(RootFolder, outPath);
-
-        if (string.IsNullOrEmpty(Path.GetExtension(filePath))) filePath = Path.Combine(filePath, resourceName);
-
-        var directoryPath = Path.GetDirectoryName(filePath);
-        if (!string.IsNullOrEmpty(directoryPath) && !Directory.Exists(directoryPath))
-            Directory.CreateDirectory(directoryPath);
+        var basePath = Path.Combine(RootFolder, outPath);
+        var filePath = string.IsNullOrEmpty(Path.GetExtension(basePath))
+            ? Path.Combine(basePath, resourceName)
+            : basePath;
 
         if (File.Exists(filePath)) return;
 
-        using var fileStream = new FileStream(filePath, FileMode.Create, FileAccess.Write);
-        stream.CopyTo(fileStream);
+        var dir = Path.GetDirectoryName(filePath);
+        if (!string.IsNullOrEmpty(dir))
+            Directory.CreateDirectory(dir);
+
+        using var output = File.Create(filePath);
+        stream.CopyTo(output);
     }
 
-    private static void ForEachFile(string dir, bool deep, Action<FileInfo> action)
+    private static DirectoryInfo GetDirectoryInfo(string dir)
     {
-        var directory = new DirectoryInfo(Path.Combine(RootFolder, dir));
-        if (!directory.Exists) return;
+        return new DirectoryInfo(Path.Combine(RootFolder, dir));
+    }
 
-        foreach (var file in directory.GetFiles()) action(file);
-
-        if (!deep) return;
-        foreach (var subDir in directory.GetDirectories())
-            ForEachFile(subDir.FullName, true, action);
+    private static FileInfo GetFileInfo(string path)
+    {
+        return new FileInfo(Path.Combine(RootFolder, path));
     }
 }
