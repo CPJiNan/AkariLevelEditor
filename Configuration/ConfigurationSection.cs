@@ -2,33 +2,33 @@
 
 public interface IConfigurationSection
 {
-    HashSet<object> GetKeys(bool deep);
-    Dictionary<object, object> GetValues(bool deep);
+    HashSet<string> GetKeys(bool deep);
+    Dictionary<string, object> GetValues(bool deep);
     bool Contains(string path);
     bool IsSet(string path);
     string GetCurrentPath();
     string GetName();
     IConfiguration GetRoot();
-    IConfigurationSection GetParent();
-    object Get(string path);
-    object Get(string path, object def);
-    void Set(string path, object value);
-    IConfigurationSection CreateSection(string path);
-    IConfigurationSection CreateSection(string path, Dictionary<string, object> map);
-    string GetString(string path);
-    string GetString(string path, string def);
+    IConfigurationSection? GetParent();
+    object? Get(string path);
+    object? Get(string path, object? def);
+    void Set(string path, object? value);
+    IConfigurationSection? CreateSection(string path);
+    IConfigurationSection? CreateSection(string path, Dictionary<string, object> map);
+    string? GetString(string path);
+    string? GetString(string path, string? def);
     bool IsString(string path);
-    int GetInt(string path);
-    int GetInt(string path, int def);
+    int? GetInt(string path);
+    int? GetInt(string path, int? def);
     bool IsInt(string path);
-    bool GetBoolean(string path);
-    bool GetBoolean(string path, bool def);
+    bool? GetBoolean(string path);
+    bool? GetBoolean(string path, bool? def);
     bool IsBoolean(string path);
-    double GetDouble(string path);
-    double GetDouble(string path, double def);
+    double? GetDouble(string path);
+    double? GetDouble(string path, double? def);
     bool IsDouble(string path);
-    long GetLong(string path);
-    long GetLong(string path, long def);
+    long? GetLong(string path);
+    long? GetLong(string path, long? def);
     bool IsLong(string path);
     List<T> GetList<T>(string path);
     List<T> GetList<T>(string path, List<T> def);
@@ -44,5 +44,5 @@ public interface IConfigurationSection
     List<short> GetShortList(string path);
     List<Dictionary<object, object>> GetMapList(string path);
     bool IsConfigurationSection(string path);
-    IConfigurationSection GetConfigurationSection(string path);
+    IConfigurationSection? GetConfigurationSection(string path);
 }

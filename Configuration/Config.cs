@@ -2,8 +2,8 @@
 
 public class Config : ConfigSection, IConfiguration
 {
-    private IConfiguration _defaults;
-    private ConfigOptions _options;
+    private IConfiguration? _defaults;
+    private ConfigOptions? _options;
 
     public Config()
     {
@@ -11,31 +11,28 @@ public class Config : ConfigSection, IConfiguration
 
     public Config(IConfiguration defaults)
     {
-        _defaults = defaults ?? throw new ArgumentNullException(nameof(defaults));
+        _defaults = defaults;
     }
 
-    public new void AddDefault(string path, object value)
+    public new void AddDefault(string path, object? value)
     {
-        if (path == null)
-            throw new ArgumentNullException(nameof(path));
+        ArgumentNullException.ThrowIfNull(path);
 
-        if (_defaults == null) _defaults = new Config();
+        _defaults ??= new Config();
 
         _defaults.Set(path, value);
     }
 
-    public void AddDefaults(Dictionary<object, object> defaults)
+    public void AddDefaults(Dictionary<string, object> defaults)
     {
-        if (defaults == null)
-            throw new ArgumentNullException(nameof(defaults));
+        ArgumentNullException.ThrowIfNull(defaults);
 
-        foreach (var entry in defaults) AddDefault(entry.Key.ToString(), entry.Value);
+        foreach (var entry in defaults) AddDefault(entry.Key, entry.Value);
     }
 
     public void AddDefaults(IConfiguration defaults)
     {
-        if (defaults == null)
-            throw new ArgumentNullException(nameof(defaults));
+        ArgumentNullException.ThrowIfNull(defaults);
 
         AddDefaults(defaults.GetValues(true));
     }
@@ -45,18 +42,18 @@ public class Config : ConfigSection, IConfiguration
         _defaults = defaults ?? throw new ArgumentNullException(nameof(defaults));
     }
 
-    public IConfiguration GetDefaults()
+    public IConfiguration? GetDefaults()
     {
         return _defaults;
     }
 
-    public new IConfigurationSection GetParent()
+    public new IConfigurationSection? GetParent()
     {
         return null;
     }
 
     public ConfigurationOptions Options()
     {
-        return _options ?? (_options = new ConfigOptions(this));
+        return _options ??= new ConfigOptions(this);
     }
 }

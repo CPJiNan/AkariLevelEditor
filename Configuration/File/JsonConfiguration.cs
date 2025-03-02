@@ -16,8 +16,8 @@ public class JsonConfiguration : Config
 
     public static JsonConfiguration LoadConfiguration(FileInfo file)
     {
-        if (file == null || !file.Exists)
-            throw new FileNotFoundException("File does not exist.", file?.FullName);
+        if (file is not { Exists: true })
+            throw new FileNotFoundException("File does not exist.", file.FullName);
 
         file.Refresh();
 
@@ -25,11 +25,11 @@ public class JsonConfiguration : Config
 
         if (string.IsNullOrWhiteSpace(jsonContent)) jsonContent = "{}";
 
-        var deserializedData = JsonConvert.DeserializeObject<Dictionary<object, object>>(jsonContent);
+        var deserializedData = JsonConvert.DeserializeObject<Dictionary<string, object>>(jsonContent);
 
         var config = new JsonConfiguration();
 
-        SetConfiguration(config, deserializedData);
+        SetConfiguration(config, deserializedData ?? new Dictionary<string, object>());
 
         return config;
     }
@@ -50,9 +50,9 @@ public class JsonConfiguration : Config
     {
         if (string.IsNullOrWhiteSpace(contents)) contents = "{}";
 
-        var deserializedData = JsonConvert.DeserializeObject<Dictionary<object, object>>(contents);
+        var deserializedData = JsonConvert.DeserializeObject<Dictionary<string, object>>(contents);
 
-        SetConfiguration(deserializedData);
+        SetConfiguration(deserializedData ?? new Dictionary<string, object>());
     }
 
     public string SaveToString()
@@ -60,31 +60,32 @@ public class JsonConfiguration : Config
         return JsonConvert.SerializeObject(GetValues(true), Formatting.Indented);
     }
 
-    private static void SetConfiguration(IConfigurationSection config, Dictionary<object, object> data)
+    private static void SetConfiguration(IConfigurationSection? config, Dictionary<string, object> data)
     {
         foreach (var kvp in data)
             if (kvp.Value is JObject nestedObj)
             {
-                var nestedDict = nestedObj.ToObject<Dictionary<object, object>>();
-                SetConfiguration(config.GetConfigurationSection(kvp.Key.ToString()), nestedDict);
+                var nestedDict = nestedObj.ToObject<Dictionary<string, object>>();
+                SetConfiguration(config?.GetConfigurationSection(kvp.Key),
+                    nestedDict ?? new Dictionary<string, object>());
             }
             else
             {
-                config.Set(kvp.Key.ToString(), kvp.Value);
+                config?.Set(kvp.Key, kvp.Value);
             }
     }
 
-    private void SetConfiguration(Dictionary<object, object> data)
+    private void SetConfiguration(Dictionary<string, object> data)
     {
         foreach (var kvp in data)
             if (kvp.Value is JObject nestedObj)
             {
-                var nestedDict = nestedObj.ToObject<Dictionary<object, object>>();
-                SetConfiguration(GetConfigurationSection(kvp.Key.ToString()), nestedDict);
+                var nestedDict = nestedObj.ToObject<Dictionary<string, object>>();
+                SetConfiguration(GetConfigurationSection(kvp.Key), nestedDict ?? new Dictionary<string, object>());
             }
             else
             {
-                Set(kvp.Key.ToString(), kvp.Value);
+                Set(kvp.Key, kvp.Value);
             }
     }
 }

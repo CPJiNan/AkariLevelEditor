@@ -4,9 +4,9 @@ namespace AkariLevelEditor.Configuration;
 
 public class ConfigSection : IConfigurationSection
 {
-    private readonly Dictionary<object, object> _map = new();
+    private readonly Dictionary<string, object> _map = new();
     private readonly IConfiguration _root;
-    private readonly IConfigurationSection _parent;
+    private readonly IConfigurationSection? _parent;
     private readonly string _path;
     private readonly string _fullPath;
 
@@ -18,7 +18,7 @@ public class ConfigSection : IConfigurationSection
         _root = (IConfiguration)this;
     }
 
-    private ConfigSection(IConfigurationSection parent, string path)
+    private ConfigSection(IConfigurationSection? parent, string path)
     {
         if (string.IsNullOrEmpty(path)) throw new ArgumentException(@"Path cannot be null or empty", nameof(path));
 
@@ -31,16 +31,15 @@ public class ConfigSection : IConfigurationSection
         _fullPath = CreatePath(parent, path);
     }
 
-    public HashSet<object> GetKeys(bool deep)
+    public HashSet<string> GetKeys(bool deep)
     {
-        var result = new HashSet<object>();
+        var result = new HashSet<string>();
 
         var root = GetRoot();
-        if (root != null && root.Options()._CopyDefaults)
+        if (root.Options().CopyDefaults)
         {
             var defaults = GetDefaultSection();
-
-            if (defaults != null) result.UnionWith(defaults.GetKeys(deep));
+            result.UnionWith(defaults?.GetKeys(deep) ?? []);
         }
 
         MapChildrenKeys(result, this, deep);
@@ -48,9 +47,9 @@ public class ConfigSection : IConfigurationSection
         return result;
     }
 
-    public Dictionary<object, object> GetValues(bool deep)
+    public Dictionary<string, object> GetValues(bool deep)
     {
-        var result = new Dictionary<object, object>();
+        var result = new Dictionary<string, object>();
 
         foreach (var kvp in _map)
             if (kvp.Value is ConfigSection section && deep)
@@ -69,9 +68,8 @@ public class ConfigSection : IConfigurationSection
     public bool IsSet(string path)
     {
         var root = GetRoot();
-        if (root == null) return false;
 
-        if (root.Options()._CopyDefaults) return Contains(path);
+        if (root.Options().CopyDefaults) return Contains(path);
 
         return Get(path, null) != null;
     }
@@ -91,7 +89,7 @@ public class ConfigSection : IConfigurationSection
         return _root;
     }
 
-    public IConfigurationSection GetParent()
+    public IConfigurationSection? GetParent()
     {
         return _parent;
     }
@@ -106,29 +104,29 @@ public class ConfigSection : IConfigurationSection
         root.AddDefault(CreatePath(this, path), value);
     }
 
-    public IConfigurationSection GetDefaultSection()
+    public IConfigurationSection? GetDefaultSection()
     {
         var root = GetRoot();
-        var defaults = root?.GetDefaults();
+        var defaults = root.GetDefaults();
 
-        if (defaults != null)
-            if (defaults.IsConfigurationSection(GetCurrentPath()))
-                return defaults.GetConfigurationSection(GetCurrentPath());
+        if (defaults == null) return null;
 
-        return null;
+        return defaults.IsConfigurationSection(GetCurrentPath())
+            ? defaults.GetConfigurationSection(GetCurrentPath())
+            : null;
     }
 
-    public void Set(string path, object value)
+    public void Set(string path, object? value)
     {
         if (string.IsNullOrEmpty(path))
             throw new ArgumentException(@"Path cannot be null or empty", nameof(path));
 
-        var keys = SplitPath(path, GetRoot().Options()._PathSeparator);
+        var keys = SplitPath(path, GetRoot().Options().PathSeparator);
 
         var current = this;
         for (var i = 0; i < keys.Count - 1; i++)
         {
-            if (!current._map.TryGetValue(keys[i], out var child) || !(child is ConfigSection))
+            if (!current._map.TryGetValue(keys[i], out var child) || child is not ConfigSection)
             {
                 child = new ConfigSection(current, keys[i]);
                 current._map[keys[i]] = child;
@@ -137,34 +135,40 @@ public class ConfigSection : IConfigurationSection
             current = (ConfigSection)child;
         }
 
-        var lastKey = keys[keys.Count - 1];
+        var lastKey = keys[^1];
 
         if (current._map.TryGetValue(lastKey, out var existingValue) &&
             existingValue is ConfigSection existingSection)
         {
             if (value is IDictionary<string, object> newMap)
+            {
                 foreach (var entry in newMap)
                     existingSection.Set(entry.Key, entry.Value);
+            }
             else
-                current._map[lastKey] = value;
+            {
+                if (value != null) current._map[lastKey] = value;
+                else current._map.Remove(lastKey);
+            }
         }
         else
         {
-            current._map[lastKey] = value;
+            if (value != null) current._map[lastKey] = value;
+            else current._map.Remove(lastKey);
         }
     }
 
-    public object Get(string path)
+    public object? Get(string path)
     {
         return Get(path, GetDefault(path));
     }
 
-    public object Get(string path, object def)
+    public object? Get(string path, object? def)
     {
         if (string.IsNullOrEmpty(path))
             throw new ArgumentException(@"Path cannot be null or empty", nameof(path));
 
-        var keys = SplitPath(path, GetRoot().Options()._PathSeparator);
+        var keys = SplitPath(path, GetRoot().Options().PathSeparator);
 
         var current = this;
         for (var i = 0; i < keys.Count; i++)
@@ -181,7 +185,7 @@ public class ConfigSection : IConfigurationSection
         return def;
     }
 
-    public IConfigurationSection CreateSection(string path)
+    public IConfigurationSection? CreateSection(string path)
     {
         if (string.IsNullOrEmpty(path))
             throw new ArgumentException(@"Cannot create section at empty path", nameof(path));
@@ -189,47 +193,43 @@ public class ConfigSection : IConfigurationSection
         var root = GetRoot();
         if (root == null) throw new InvalidOperationException("Cannot create section without a root");
 
-        var separator = root.Options()._PathSeparator;
+        var separator = root.Options().PathSeparator;
         int i1 = -1, i2;
-        IConfigurationSection section = this;
+        IConfigurationSection? section = this;
         while ((i1 = path.IndexOf(separator, i2 = i1 + 1)) != -1)
         {
             var node = path.Substring(i2, i1 - i2);
-            var subSection = section.GetConfigurationSection(node);
-            section = subSection ?? section.CreateSection(node);
+            var subSection = section?.GetConfigurationSection(node);
+            section = subSection ?? section?.CreateSection(node);
         }
 
-        var key = path.Substring(i2);
-        if (section == this)
-        {
-            IConfigurationSection result = new ConfigSection(this, key);
-            _map[key] = result;
-            return result;
-        }
-
-        return section.CreateSection(key);
+        var key = path[i2..];
+        if (section != this) return section?.CreateSection(key);
+        IConfigurationSection result = new ConfigSection(this, key);
+        _map[key] = result;
+        return result;
     }
 
-    public IConfigurationSection CreateSection(string path, Dictionary<string, object> map)
+    public IConfigurationSection? CreateSection(string path, Dictionary<string, object> map)
     {
         var section = CreateSection(path);
 
         foreach (var entry in map)
             if (entry.Value is Dictionary<string, object> subMap)
-                section.CreateSection(entry.Key, subMap);
+                section?.CreateSection(entry.Key, subMap);
             else
-                section.Set(entry.Key, entry.Value);
+                section?.Set(entry.Key, entry.Value);
 
         return section;
     }
 
-    public string GetString(string path)
+    public string? GetString(string path)
     {
         var def = GetDefault(path);
         return GetString(path, def?.ToString());
     }
 
-    public string GetString(string path, string def)
+    public string? GetString(string path, string? def)
     {
         var val = Get(path, def);
         return val?.ToString() ?? def;
@@ -241,13 +241,13 @@ public class ConfigSection : IConfigurationSection
         return val is string;
     }
 
-    public int GetInt(string path)
+    public int? GetInt(string path)
     {
         var def = GetDefault(path);
         return GetInt(path, def is int i ? i : 0);
     }
 
-    public int GetInt(string path, int def)
+    public int? GetInt(string path, int? def)
     {
         var val = Get(path, def);
         if (val is int intValue)
@@ -265,13 +265,13 @@ public class ConfigSection : IConfigurationSection
         return val is int;
     }
 
-    public bool GetBoolean(string path)
+    public bool? GetBoolean(string path)
     {
         var def = GetDefault(path);
-        return GetBoolean(path, def is bool b && b);
+        return GetBoolean(path, def is true);
     }
 
-    public bool GetBoolean(string path, bool def)
+    public bool? GetBoolean(string path, bool? def)
     {
         var val = Get(path, def);
         return val as bool? ?? def;
@@ -283,22 +283,21 @@ public class ConfigSection : IConfigurationSection
         return val is bool;
     }
 
-    public double GetDouble(string path)
+    public double? GetDouble(string path)
     {
         var def = GetDefault(path);
         return GetDouble(path, def is double d ? d : 0.0);
     }
 
-    public double GetDouble(string path, double def)
+    public double? GetDouble(string path, double? def)
     {
         var val = Get(path, def);
-        if (val is double value)
-            return value;
-        else if (val is string str)
-            if (double.TryParse(str, out var doubleValue))
-                return doubleValue;
-
-        return def;
+        return val switch
+        {
+            double value => value,
+            string str when double.TryParse(str, out var doubleValue) => doubleValue,
+            _ => def
+        };
     }
 
     public bool IsDouble(string path)
@@ -307,22 +306,21 @@ public class ConfigSection : IConfigurationSection
         return val is double;
     }
 
-    public long GetLong(string path)
+    public long? GetLong(string path)
     {
         var def = GetDefault(path);
         return GetLong(path, def is long l ? l : 0L);
     }
 
-    public long GetLong(string path, long def)
+    public long? GetLong(string path, long? def)
     {
         var val = Get(path, def);
-        if (val is long value)
-            return value;
-        else if (val is string str)
-            if (long.TryParse(str, out var longValue))
-                return longValue;
-
-        return def;
+        return val switch
+        {
+            long value => value,
+            string str when long.TryParse(str, out var longValue) => longValue,
+            _ => def
+        };
     }
 
     public bool IsLong(string path)
@@ -334,19 +332,19 @@ public class ConfigSection : IConfigurationSection
     public List<object> GetList(string path)
     {
         var def = GetDefault(path);
-        return GetList(path, def as List<object>);
+        return GetList(path, def as List<object> ?? []);
     }
 
     public List<object> GetList(string path, List<object> def)
     {
         var val = Get(path, def);
-        return val is List<object> list ? list : def;
+        return val as List<object> ?? def;
     }
 
     public List<T> GetList<T>(string path)
     {
         var def = GetDefault(path);
-        return GetList(path, def as List<T>);
+        return GetList(path, def as List<T> ?? []);
     }
 
     public List<T> GetList<T>(string path, List<T> def)
@@ -365,40 +363,39 @@ public class ConfigSection : IConfigurationSection
     {
         var list = GetList(path);
 
-        if (list == null) return new List<string>(0);
-
-        var result = new List<string>();
-
-        foreach (var obj in list)
-            if (obj is string || IsPrimitiveWrapper(obj))
-                result.Add(obj.ToString());
-
-        return result;
+        return (from obj in list where obj is string || IsPrimitiveWrapper(obj) select obj.ToString()).ToList();
     }
 
     public List<int> GetIntegerList(string path)
     {
         var list = GetList(path);
 
-        if (list == null) return new List<int>(0);
-
         var result = new List<int>();
 
         foreach (var obj in list)
-            if (obj is int intValue)
-                result.Add(intValue);
-            else if (obj is string str)
-                try
-                {
-                    result.Add(int.Parse(str));
-                }
-                catch
-                {
-                    // ignored
-                }
-            else if (obj is char ch)
-                result.Add(ch);
-            else if (obj is IConvertible convertible) result.Add(convertible.ToInt32(null));
+            switch (obj)
+            {
+                case int intValue:
+                    result.Add(intValue);
+                    break;
+                case string str:
+                    try
+                    {
+                        result.Add(int.Parse(str));
+                    }
+                    catch
+                    {
+                        // ignored
+                    }
+
+                    break;
+                case char ch:
+                    result.Add(ch);
+                    break;
+                case IConvertible convertible:
+                    result.Add(convertible.ToInt32(null));
+                    break;
+            }
 
         return result;
     }
@@ -407,20 +404,22 @@ public class ConfigSection : IConfigurationSection
     {
         var list = GetList(path);
 
-        if (list == null) return new List<bool>(0);
-
         var result = new List<bool>();
 
         foreach (var obj in list)
-            if (obj is bool boolValue)
+            switch (obj)
             {
-                result.Add(boolValue);
-            }
-            else if (obj is string str)
-            {
-                if (bool.TrueString.Equals(str, StringComparison.OrdinalIgnoreCase))
+                case bool boolValue:
+                    result.Add(boolValue);
+                    break;
+                case string str when bool.TrueString.Equals(str, StringComparison.OrdinalIgnoreCase):
                     result.Add(true);
-                else if (bool.FalseString.Equals(str, StringComparison.OrdinalIgnoreCase)) result.Add(false);
+                    break;
+                case string str:
+                {
+                    if (bool.FalseString.Equals(str, StringComparison.OrdinalIgnoreCase)) result.Add(false);
+                    break;
+                }
             }
 
         return result;
@@ -429,8 +428,6 @@ public class ConfigSection : IConfigurationSection
     public List<double> GetDoubleList(string path)
     {
         var list = GetList(path);
-
-        if (list == null) return new List<double>(0);
 
         var result = new List<double>();
 
@@ -466,25 +463,32 @@ public class ConfigSection : IConfigurationSection
     {
         var list = GetList(path);
 
-        if (list == null) return new List<float>(0);
-
         var result = new List<float>();
 
         foreach (var obj in list)
-            if (obj is float floatValue)
-                result.Add(floatValue);
-            else if (obj is string str)
-                try
-                {
-                    result.Add(float.Parse(str));
-                }
-                catch
-                {
-                    // ignored
-                }
-            else if (obj is char ch)
-                result.Add(ch);
-            else if (obj is IConvertible convertible) result.Add(convertible.ToSingle(null));
+            switch (obj)
+            {
+                case float floatValue:
+                    result.Add(floatValue);
+                    break;
+                case string str:
+                    try
+                    {
+                        result.Add(float.Parse(str));
+                    }
+                    catch
+                    {
+                        // ignored
+                    }
+
+                    break;
+                case char ch:
+                    result.Add(ch);
+                    break;
+                case IConvertible convertible:
+                    result.Add(convertible.ToSingle(null));
+                    break;
+            }
 
         return result;
     }
@@ -493,25 +497,32 @@ public class ConfigSection : IConfigurationSection
     {
         var list = GetList(path);
 
-        if (list == null) return new List<long>(0);
-
         var result = new List<long>();
 
         foreach (var obj in list)
-            if (obj is long longValue)
-                result.Add(longValue);
-            else if (obj is string str)
-                try
-                {
-                    result.Add(long.Parse(str));
-                }
-                catch
-                {
-                    // ignored
-                }
-            else if (obj is char ch)
-                result.Add(ch);
-            else if (obj is IConvertible convertible) result.Add(convertible.ToInt64(null));
+            switch (obj)
+            {
+                case long longValue:
+                    result.Add(longValue);
+                    break;
+                case string str:
+                    try
+                    {
+                        result.Add(long.Parse(str));
+                    }
+                    catch
+                    {
+                        // ignored
+                    }
+
+                    break;
+                case char ch:
+                    result.Add(ch);
+                    break;
+                case IConvertible convertible:
+                    result.Add(convertible.ToInt64(null));
+                    break;
+            }
 
         return result;
     }
@@ -520,25 +531,32 @@ public class ConfigSection : IConfigurationSection
     {
         var list = GetList(path);
 
-        if (list == null) return new List<byte>(0);
-
         var result = new List<byte>();
 
         foreach (var obj in list)
-            if (obj is byte byteValue)
-                result.Add(byteValue);
-            else if (obj is string str)
-                try
-                {
-                    result.Add(byte.Parse(str));
-                }
-                catch
-                {
-                    // ignored
-                }
-            else if (obj is char ch)
-                result.Add((byte)ch);
-            else if (obj is IConvertible convertible) result.Add(convertible.ToByte(null));
+            switch (obj)
+            {
+                case byte byteValue:
+                    result.Add(byteValue);
+                    break;
+                case string str:
+                    try
+                    {
+                        result.Add(byte.Parse(str));
+                    }
+                    catch
+                    {
+                        // ignored
+                    }
+
+                    break;
+                case char ch:
+                    result.Add((byte)ch);
+                    break;
+                case IConvertible convertible:
+                    result.Add(convertible.ToByte(null));
+                    break;
+            }
 
         return result;
     }
@@ -547,16 +565,21 @@ public class ConfigSection : IConfigurationSection
     {
         var list = GetList(path);
 
-        if (list == null) return new List<char>(0);
-
         var result = new List<char>();
 
         foreach (var obj in list)
-            if (obj is char charValue)
-                result.Add(charValue);
-            else if (obj is string str && str.Length == 1)
-                result.Add(str[0]);
-            else if (obj is IConvertible convertible) result.Add((char)convertible.ToInt32(null));
+            switch (obj)
+            {
+                case char charValue:
+                    result.Add(charValue);
+                    break;
+                case string { Length: 1 } str:
+                    result.Add(str[0]);
+                    break;
+                case IConvertible convertible:
+                    result.Add((char)convertible.ToInt32(null));
+                    break;
+            }
 
         return result;
     }
@@ -565,25 +588,32 @@ public class ConfigSection : IConfigurationSection
     {
         var list = GetList(path);
 
-        if (list == null) return new List<short>(0);
-
         var result = new List<short>();
 
         foreach (var obj in list)
-            if (obj is short shortValue)
-                result.Add(shortValue);
-            else if (obj is string str)
-                try
-                {
-                    result.Add(short.Parse(str));
-                }
-                catch
-                {
-                    // ignored
-                }
-            else if (obj is char ch)
-                result.Add((short)ch);
-            else if (obj is IConvertible convertible) result.Add(convertible.ToInt16(null));
+            switch (obj)
+            {
+                case short shortValue:
+                    result.Add(shortValue);
+                    break;
+                case string str:
+                    try
+                    {
+                        result.Add(short.Parse(str));
+                    }
+                    catch
+                    {
+                        // ignored
+                    }
+
+                    break;
+                case char ch:
+                    result.Add((short)ch);
+                    break;
+                case IConvertible convertible:
+                    result.Add(convertible.ToInt16(null));
+                    break;
+            }
 
         return result;
     }
@@ -592,8 +622,6 @@ public class ConfigSection : IConfigurationSection
     {
         var list = GetList(path);
         var result = new List<Dictionary<object, object>>();
-
-        if (list == null) return result;
 
         foreach (var obj in list)
             if (obj is Dictionary<object, object> mapValue)
@@ -604,7 +632,7 @@ public class ConfigSection : IConfigurationSection
 
     public IConfigurationSection GetConfigurationSection(string key)
     {
-        var keys = SplitPath(key, GetRoot().Options()._PathSeparator);
+        var keys = SplitPath(key, GetRoot().Options().PathSeparator);
 
         var current = this;
         foreach (var t in keys)
@@ -629,28 +657,25 @@ public class ConfigSection : IConfigurationSection
 
     public static bool IsPrimitiveWrapper(object input)
     {
-        return input is int || input is bool ||
-               input is char || input is byte ||
-               input is short || input is double ||
-               input is long || input is float;
+        return input is int or bool or char or byte or short or double or long or float;
     }
 
-    public object GetDefault(string path)
+    public object? GetDefault(string path)
     {
         if (string.IsNullOrEmpty(path)) throw new ArgumentException(@"Path cannot be null or empty", nameof(path));
 
         var root = GetRoot();
-        var defaults = root?.GetDefaults();
+        var defaults = root.GetDefaults();
         return defaults?.Get(CreatePath(this, path));
     }
 
-    private void MapChildrenKeys(ISet<object> output, IConfigurationSection section, bool deep)
+    private void MapChildrenKeys(ISet<string> output, IConfigurationSection section, bool deep)
     {
         if (section is ConfigSection sec)
         {
             foreach (var entry in sec._map)
             {
-                output.Add(CreatePath(section, entry.Key.ToString(), this));
+                output.Add(CreatePath(section, entry.Key, this));
 
                 if (!deep || !(entry.Value is IConfigurationSection subsection)) continue;
                 MapChildrenKeys(output, subsection, true);
@@ -658,37 +683,37 @@ public class ConfigSection : IConfigurationSection
         }
         else
         {
-            ISet<object> keys = section.GetKeys(deep);
+            ISet<string> keys = section.GetKeys(deep);
 
-            foreach (var key in keys) output.Add(CreatePath(section, key.ToString(), this));
+            foreach (var key in keys) output.Add(CreatePath(section, key, this));
         }
     }
 
-    private void MapChildrenValues(IDictionary<object, object> output, IConfigurationSection section, bool deep)
+    private void MapChildrenValues(IDictionary<string, object> output, IConfigurationSection section, bool deep)
     {
         if (section is ConfigSection sec)
         {
             foreach (var entry in sec._map)
             {
-                output[CreatePath(section, entry.Key.ToString(), this)] = entry.Value;
+                output[CreatePath(section, entry.Key, this)] = entry.Value;
 
                 if (entry.Value is IConfigurationSection value && deep) MapChildrenValues(output, value, true);
             }
         }
         else
         {
-            IDictionary<object, object> values = section.GetValues(deep);
+            IDictionary<string, object> values = section.GetValues(deep);
 
-            foreach (var entry in values) output[CreatePath(section, entry.Key.ToString(), this)] = entry.Value;
+            foreach (var entry in values) output[CreatePath(section, entry.Key, this)] = entry.Value;
         }
     }
 
     private static string CreatePath(IConfigurationSection section, string key)
     {
-        return CreatePath(section, key, section?.GetRoot());
+        return CreatePath(section, key, section.GetRoot());
     }
 
-    private static string CreatePath(IConfigurationSection section, string key, IConfigurationSection relativeTo)
+    private static string CreatePath(IConfigurationSection? section, string key, IConfigurationSection relativeTo)
     {
         if (section == null)
             throw new ArgumentNullException(nameof(section), @"Cannot create path without a section");
@@ -696,7 +721,7 @@ public class ConfigSection : IConfigurationSection
         var root = section.GetRoot();
         if (root == null) throw new InvalidOperationException("Cannot create path without a root");
 
-        var separator = root.Options()._PathSeparator;
+        var separator = root.Options().PathSeparator;
 
         var builder = new StringBuilder();
         for (var parent = section;
@@ -720,7 +745,7 @@ public class ConfigSection : IConfigurationSection
 
     private static List<string> SplitPath(string path, char separator)
     {
-        return path.Split(new[] { separator }, StringSplitOptions.RemoveEmptyEntries).ToList();
+        return path.Split([separator], StringSplitOptions.RemoveEmptyEntries).ToList();
     }
 
     public override string ToString()
@@ -731,7 +756,7 @@ public class ConfigSection : IConfigurationSection
             .Append("[path='")
             .Append(GetCurrentPath())
             .Append("', root='")
-            .Append(root?.GetType().Name)
+            .Append(root.GetType().Name)
             .Append("']")
             .ToString();
     }

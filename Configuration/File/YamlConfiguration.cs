@@ -15,8 +15,8 @@ public class YamlConfiguration : Config
 
     public static YamlConfiguration LoadConfiguration(FileInfo file)
     {
-        if (file == null || !file.Exists)
-            throw new FileNotFoundException("File does not exist.", file?.FullName);
+        if (file is not { Exists: true })
+            throw new FileNotFoundException("File does not exist.", file.FullName);
 
         file.Refresh();
 
@@ -27,7 +27,8 @@ public class YamlConfiguration : Config
         var deserializer = new DeserializerBuilder()
             .Build();
 
-        var deserializedData = deserializer.Deserialize<Dictionary<object, object>>(yamlContent);
+        var deserializedData =
+            deserializer.Deserialize<Dictionary<string, object>>(yamlContent);
 
         var config = new YamlConfiguration();
 
@@ -58,7 +59,7 @@ public class YamlConfiguration : Config
         var deserializer = new DeserializerBuilder()
             .Build();
 
-        var deserializedData = deserializer.Deserialize<Dictionary<object, object>>(contents);
+        var deserializedData = deserializer.Deserialize<Dictionary<string, object>>(contents);
 
         SetConfiguration(deserializedData);
     }
@@ -71,21 +72,21 @@ public class YamlConfiguration : Config
         return serializer.Serialize(GetValues(true));
     }
 
-    private static void SetConfiguration(IConfigurationSection config, Dictionary<object, object> data)
+    private static void SetConfiguration(IConfigurationSection? config, Dictionary<string, object> data)
     {
         foreach (var kvp in data)
-            if (kvp.Value is Dictionary<object, object> nestedDict)
-                SetConfiguration(config.GetConfigurationSection(kvp.Key.ToString()), nestedDict);
+            if (kvp.Value is Dictionary<string, object> nestedDict)
+                SetConfiguration(config?.GetConfigurationSection(kvp.Key), nestedDict);
             else
-                config.Set(kvp.Key.ToString(), kvp.Value);
+                config?.Set(kvp.Key, kvp.Value);
     }
 
-    private void SetConfiguration(Dictionary<object, object> data)
+    private void SetConfiguration(Dictionary<string, object> data)
     {
         foreach (var kvp in data)
-            if (kvp.Value is Dictionary<object, object> nestedDict)
-                SetConfiguration(GetConfigurationSection(kvp.Key.ToString()), nestedDict);
+            if (kvp.Value is Dictionary<string, object> nestedDict)
+                SetConfiguration(GetConfigurationSection(kvp.Key), nestedDict);
             else
-                Set(kvp.Key.ToString(), kvp.Value);
+                Set(kvp.Key, kvp.Value);
     }
 }
