@@ -25,11 +25,11 @@ public class JsonConfiguration : Config
 
         if (string.IsNullOrWhiteSpace(jsonContent)) jsonContent = "{}";
 
-        var deserializedData = JsonConvert.DeserializeObject<Dictionary<string, object>>(jsonContent);
+        var deserializedData = JsonConvert.DeserializeObject<Dictionary<object, object>>(jsonContent);
 
         var config = new JsonConfiguration();
 
-        SetConfiguration(config, deserializedData ?? new Dictionary<string, object>());
+        SetConfiguration(config, deserializedData ?? new Dictionary<object, object>());
 
         return config;
     }
@@ -50,9 +50,9 @@ public class JsonConfiguration : Config
     {
         if (string.IsNullOrWhiteSpace(contents)) contents = "{}";
 
-        var deserializedData = JsonConvert.DeserializeObject<Dictionary<string, object>>(contents);
+        var deserializedData = JsonConvert.DeserializeObject<Dictionary<object, object>>(contents);
 
-        SetConfiguration(deserializedData ?? new Dictionary<string, object>());
+        SetConfiguration(deserializedData ?? new Dictionary<object, object>());
     }
 
     public string SaveToString()
@@ -60,32 +60,32 @@ public class JsonConfiguration : Config
         return JsonConvert.SerializeObject(GetValues(true), Formatting.Indented);
     }
 
-    private static void SetConfiguration(IConfigurationSection? config, Dictionary<string, object> data)
+    private static void SetConfiguration(IConfigurationSection? config, Dictionary<object, object> data)
     {
         foreach (var kvp in data)
             if (kvp.Value is JObject nestedObj)
             {
-                var nestedDict = nestedObj.ToObject<Dictionary<string, object>>();
-                SetConfiguration(config?.GetConfigurationSection(kvp.Key),
-                    nestedDict ?? new Dictionary<string, object>());
+                var nestedDict = nestedObj.ToObject<Dictionary<object, object>>();
+                SetConfiguration(config?.GetConfigurationSection(kvp.Key.ToString() ?? throw new InvalidOperationException()),
+                    nestedDict ?? new Dictionary<object, object>());
             }
             else
             {
-                config?.Set(kvp.Key, kvp.Value);
+                config?.Set(kvp.Key.ToString() ?? throw new InvalidOperationException(), kvp.Value);
             }
     }
 
-    private void SetConfiguration(Dictionary<string, object> data)
+    private void SetConfiguration(Dictionary<object, object> data)
     {
         foreach (var kvp in data)
             if (kvp.Value is JObject nestedObj)
             {
-                var nestedDict = nestedObj.ToObject<Dictionary<string, object>>();
-                SetConfiguration(GetConfigurationSection(kvp.Key), nestedDict ?? new Dictionary<string, object>());
+                var nestedDict = nestedObj.ToObject<Dictionary<object, object>>();
+                SetConfiguration(GetConfigurationSection(kvp.Key.ToString() ?? throw new InvalidOperationException()), nestedDict ?? new Dictionary<object, object>());
             }
             else
             {
-                Set(kvp.Key, kvp.Value);
+                Set(kvp.Key.ToString() ?? throw new InvalidOperationException(), kvp.Value);
             }
     }
 }
