@@ -66,7 +66,8 @@ public class JsonConfiguration : Config
             if (kvp.Value is JObject nestedObj)
             {
                 var nestedDict = nestedObj.ToObject<Dictionary<object, object>>();
-                SetConfiguration(config?.GetConfigurationSection(kvp.Key.ToString() ?? throw new InvalidOperationException()),
+                SetConfiguration(
+                    config?.GetConfigurationSection(kvp.Key.ToString() ?? throw new InvalidOperationException()),
                     nestedDict ?? new Dictionary<object, object>());
             }
             else
@@ -81,7 +82,8 @@ public class JsonConfiguration : Config
             if (kvp.Value is JObject nestedObj)
             {
                 var nestedDict = nestedObj.ToObject<Dictionary<object, object>>();
-                SetConfiguration(GetConfigurationSection(kvp.Key.ToString() ?? throw new InvalidOperationException()), nestedDict ?? new Dictionary<object, object>());
+                SetConfiguration(GetConfigurationSection(kvp.Key.ToString() ?? throw new InvalidOperationException()),
+                    nestedDict ?? new Dictionary<object, object>());
             }
             else
             {

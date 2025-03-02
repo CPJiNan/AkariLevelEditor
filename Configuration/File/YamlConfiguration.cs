@@ -76,7 +76,9 @@ public class YamlConfiguration : Config
     {
         foreach (var kvp in data)
             if (kvp.Value is Dictionary<object, object> nestedDict)
-                SetConfiguration(config?.GetConfigurationSection(kvp.Key.ToString() ?? throw new InvalidOperationException()), nestedDict);
+                SetConfiguration(
+                    config?.GetConfigurationSection(kvp.Key.ToString() ?? throw new InvalidOperationException()),
+                    nestedDict);
             else
                 config?.Set(kvp.Key.ToString() ?? throw new InvalidOperationException(), kvp.Value);
     }
@@ -85,7 +87,8 @@ public class YamlConfiguration : Config
     {
         foreach (var kvp in data)
             if (kvp.Value is Dictionary<object, object> nestedDict)
-                SetConfiguration(GetConfigurationSection(kvp.Key.ToString() ?? throw new InvalidOperationException()), nestedDict);
+                SetConfiguration(GetConfigurationSection(kvp.Key.ToString() ?? throw new InvalidOperationException()),
+                    nestedDict);
             else
                 Set(kvp.Key.ToString() ?? throw new InvalidOperationException(), kvp.Value);
     }
