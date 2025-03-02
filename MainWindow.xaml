@@ -3,7 +3,8 @@
                  xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                  xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
                  xmlns:pages="clr-namespace:AkariLevelEditor.Pages"
-                 Title="MainWindow" Height="810" Width="1440">
+                 Height="810" Width="1440"
+                 WindowStartupLocation="CenterScreen" WindowStyle="None">
     <Grid>
 
         <Grid.RowDefinitions>
