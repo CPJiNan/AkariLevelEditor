@@ -23,7 +23,8 @@
     </ItemGroup>
 
     <ItemGroup>
-        <Folder Include="Resources\"/>
+        <None Remove="Resources\Preference.yml"/>
+        <EmbeddedResource Include="Resources\Preferences.yml"/>
     </ItemGroup>
 
 </Project>

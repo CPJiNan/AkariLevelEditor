@@ -18,10 +18,9 @@
 
                         <ComboBox x:Name="ThemeComboBox"
                                   Width="220"
-                                  SelectedIndex="0">
+                                  SelectionChanged="ThemeComboBox_SelectionChanged">
                             <ComboBoxItem Tag="Light" Content="浅色模式" />
                             <ComboBoxItem Tag="Dark" Content="深色模式" />
-                            <ComboBoxItem Tag="System" Content="跟随系统" />
                         </ComboBox>
 
                     </StackPanel>
