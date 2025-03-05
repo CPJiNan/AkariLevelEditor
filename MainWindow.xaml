@@ -4,7 +4,8 @@
                  xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
                  xmlns:pages="clr-namespace:AkariLevelEditor.Pages"
                  Height="810" Width="1440"
-                 WindowStartupLocation="CenterScreen" WindowStyle="None">
+                 WindowStartupLocation="CenterScreen" WindowStyle="None"
+                 Title="AkariLevelEditor" Icon="Resources/Icon.ico">
     <Grid>
 
         <Grid.RowDefinitions>

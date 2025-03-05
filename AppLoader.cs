@@ -20,7 +20,5 @@ public class AppLoader
                 ApplicationThemeManager.Apply(ApplicationTheme.Dark);
                 break;
         }
-
-        ;
     }
 }
