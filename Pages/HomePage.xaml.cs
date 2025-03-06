@@ -34,7 +34,7 @@ public partial class HomePage : INotifyPropertyChanged
     private string _selectedAttributePlugin = "AttributePlus";
     private string _attributeName = "经验加成";
     private string _attributeFormula = "%exp% * ( 1 + %attribute% / 100 )";
-    private string _attributeSource = "MYTHICMOBS_DROP_EXP,VANILLA_EXP_CHANGE";
+    private string _attributeSource = "MYTHICMOBS_DROP_EXP\nVANILLA_EXP_CHANGE";
     private string _placeholderPrefix = "akarilevel";
     private string _levelBarEmpty = "□";
     private string _levelBarFull = "■";
@@ -545,7 +545,7 @@ public partial class HomePage : INotifyPropertyChanged
                          Plugin: {SelectedTeamPlugin}
                          # 参与共享的经验来源
                          Source:
-                           - "{TeamSource}"
+                       {string.Join("\n", TeamSource.Split(['\r', '\n'], StringSplitOptions.RemoveEmptyEntries).Select(s => $"    - \"{s}\""))}
                          # 待分配的经验池总额 (JavaScript 支持)
                          # %exp% -> 分配前的经验数额
                          # %size% -> 队伍人数
@@ -576,7 +576,7 @@ public partial class HomePage : INotifyPropertyChanged
                          Formula: "{AttributeFormula}"
                          # 所监听的 PlayerExpChangeEvent 来源
                          Source:
-                           - "{AttributeSource}"
+                       {string.Join("\n", AttributeSource.Split(['\r', '\n'], StringSplitOptions.RemoveEmptyEntries).Select(s => $"    - \"{s}\""))}
 
                        ####################
                        #  PlaceholderAPI  #
