@@ -2,10 +2,612 @@
       xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
       xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
-      Height="450" Width="800">
+      HorizontalAlignment="Stretch"
+      VerticalAlignment="Stretch">
+    <Page.Resources>
+        <Style x:Key="CardTitleTextBlockStyle" TargetType="TextBlock">
+            <Setter Property="FontSize" Value="18"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+            <Setter Property="Margin" Value="0,0,0,16"/>
+        </Style>
+        
+        <Style x:Key="SubTitleTextBlockStyle" TargetType="TextBlock">
+            <Setter Property="FontSize" Value="16"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+            <Setter Property="Margin" Value="0,0,0,8"/>
+        </Style>
+    </Page.Resources>
+    
     <Grid>
-        <ui:Card Margin="8">
-            <ui:Button Content="Hello World" Icon="{ui:SymbolIcon Fluent24}" />
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="*" />
+        </Grid.ColumnDefinitions>
+
+        <!-- 左侧配置编辑区域 -->
+        <ScrollViewer Grid.Column="0" Margin="8">
+            <StackPanel>
+                <!-- 全局设置 -->
+                <ui:Card Margin="0,0,0,16">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                        </Grid.RowDefinitions>
+                        
+                        <TextBlock Text="全局设置" 
+                                 Style="{StaticResource CardTitleTextBlockStyle}"/>
+                        
+                        <StackPanel Grid.Row="1">
+                            <Grid Margin="0,0,0,10">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto"/>
+                                    <ColumnDefinition Width="*"/>
+                                </Grid.ColumnDefinitions>
+                                <TextBlock Text="语言" 
+                                         VerticalAlignment="Center"
+                                         Margin="0,0,16,0"/>
+                                <ComboBox Grid.Column="1"
+                                         ItemsSource="{Binding Languages}"
+                                         SelectedItem="{Binding SelectedLanguage}"/>
+                            </Grid>
+                            
+                            <Grid Margin="0,0,0,10">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto"/>
+                                    <ColumnDefinition Width="*"/>
+                                </Grid.ColumnDefinitions>
+                                <TextBlock Text="配置文件版本" 
+                                         VerticalAlignment="Center"
+                                         Margin="0,0,16,0"/>
+                                <ui:NumberBox Grid.Column="1"
+                                            Value="{Binding ConfigVersion}"/>
+                            </Grid>
+                            
+                            <Grid Margin="0,0,0,10">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto"/>
+                                    <ColumnDefinition Width="*"/>
+                                </Grid.ColumnDefinitions>
+                                <TextBlock Text="检查版本更新" 
+                                         VerticalAlignment="Center"
+                                         Margin="0,0,16,0"/>
+                                <ui:ToggleSwitch Grid.Column="1"
+                                               IsChecked="{Binding CheckUpdate}"/>
+                            </Grid>
+                            
+                            <Grid Margin="0,0,0,10">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto"/>
+                                    <ColumnDefinition Width="*"/>
+                                </Grid.ColumnDefinitions>
+                                <TextBlock Text="OP 版本更新通知" 
+                                         VerticalAlignment="Center"
+                                         Margin="0,0,16,0"/>
+                                <ui:ToggleSwitch Grid.Column="1"
+                                               IsChecked="{Binding OpNotify}"/>
+                            </Grid>
+                            
+                            <Grid Margin="0,0,0,10">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto"/>
+                                    <ColumnDefinition Width="*"/>
+                                </Grid.ColumnDefinitions>
+                                <TextBlock Text="启用 bStats 统计" 
+                                         VerticalAlignment="Center"
+                                         Margin="0,0,16,0"/>
+                                <ui:ToggleSwitch Grid.Column="1"
+                                               IsChecked="{Binding SendMetrics}"/>
+                            </Grid>
+                            
+                            <Grid Margin="0,0,0,10">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto"/>
+                                    <ColumnDefinition Width="*"/>
+                                </Grid.ColumnDefinitions>
+                                <TextBlock Text="启用调试模式" 
+                                         VerticalAlignment="Center"
+                                         Margin="0,0,16,0"/>
+                                <ui:ToggleSwitch Grid.Column="1"
+                                               IsChecked="{Binding Debug}"/>
+                            </Grid>
+                        </StackPanel>
+                    </Grid>
+                </ui:Card>
+
+                <!-- 数据库设置 -->
+                <ui:Card Margin="0,0,0,16">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                        </Grid.RowDefinitions>
+                        
+                        <TextBlock Text="数据库设置" 
+                                 Style="{StaticResource CardTitleTextBlockStyle}"/>
+                        
+                        <StackPanel Grid.Row="1">
+                            <Grid Margin="0,0,0,10">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto"/>
+                                    <ColumnDefinition Width="*"/>
+                                </Grid.ColumnDefinitions>
+                                <TextBlock Text="使用玩家 UUID 进行存储" 
+                                         VerticalAlignment="Center"
+                                         Margin="0,0,16,0"/>
+                                <ui:ToggleSwitch Grid.Column="1"
+                                               IsChecked="{Binding UseUUID}"/>
+                            </Grid>
+                            
+                            <Grid Margin="0,0,0,10">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto"/>
+                                    <ColumnDefinition Width="*"/>
+                                </Grid.ColumnDefinitions>
+                                <TextBlock Text="存储方式" 
+                                         VerticalAlignment="Center"
+                                         Margin="0,0,16,0"/>
+                                <ComboBox Grid.Column="1"
+                                         ItemsSource="{Binding DatabaseMethods}"
+                                         SelectedItem="{Binding SelectedDatabaseMethod}"/>
+                            </Grid>
+
+                            <!-- JSON 设置 -->
+                            <Expander Header="JSON 设置" 
+                                    Margin="0,8,0,10"
+                                    Visibility="{Binding IsJsonSelected, Converter={StaticResource BooleanToVisibilityConverter}}">
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto"/>
+                                        <ColumnDefinition Width="*"/>
+                                    </Grid.ColumnDefinitions>
+                                    <TextBlock Text="文件路径" 
+                                             VerticalAlignment="Center"
+                                             Margin="0,0,16,0"/>
+                                    <ui:TextBox Grid.Column="1"
+                                              Text="{Binding JsonFilePath}"/>
+                                </Grid>
+                            </Expander>
+
+                            <!-- SQL 设置 -->
+                            <Expander Header="SQL 设置" 
+                                    Margin="0,8,0,10"
+                                    Visibility="{Binding IsSqlSelected, Converter={StaticResource BooleanToVisibilityConverter}}">
+                                <StackPanel>
+                                    <Grid Margin="0,0,0,10">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="Auto"/>
+                                            <ColumnDefinition Width="*"/>
+                                        </Grid.ColumnDefinitions>
+                                        <TextBlock Text="主机" 
+                                                 VerticalAlignment="Center"
+                                                 Margin="0,0,16,0"/>
+                                        <ui:TextBox Grid.Column="1"
+                                                  Text="{Binding SqlHost}"/>
+                                    </Grid>
+                                    
+                                    <Grid Margin="0,0,0,10">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="Auto"/>
+                                            <ColumnDefinition Width="*"/>
+                                        </Grid.ColumnDefinitions>
+                                        <TextBlock Text="端口" 
+                                                 VerticalAlignment="Center"
+                                                 Margin="0,0,16,0"/>
+                                        <ui:NumberBox Grid.Column="1"
+                                                    Value="{Binding SqlPort}"/>
+                                    </Grid>
+                                    
+                                    <Grid Margin="0,0,0,10">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="Auto"/>
+                                            <ColumnDefinition Width="*"/>
+                                        </Grid.ColumnDefinitions>
+                                        <TextBlock Text="用户名" 
+                                                 VerticalAlignment="Center"
+                                                 Margin="0,0,16,0"/>
+                                        <ui:TextBox Grid.Column="1"
+                                                  Text="{Binding SqlUser}"/>
+                                    </Grid>
+                                    
+                                    <Grid Margin="0,0,0,10">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="Auto"/>
+                                            <ColumnDefinition Width="*"/>
+                                        </Grid.ColumnDefinitions>
+                                        <TextBlock Text="密码" 
+                                                 VerticalAlignment="Center"
+                                                 Margin="0,0,16,0"/>
+                                        <ui:PasswordBox Grid.Column="1"
+                                                      Password="{Binding SqlPassword}"/>
+                                    </Grid>
+                                    
+                                    <Grid Margin="0,0,0,10">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="Auto"/>
+                                            <ColumnDefinition Width="*"/>
+                                        </Grid.ColumnDefinitions>
+                                        <TextBlock Text="数据库" 
+                                                 VerticalAlignment="Center"
+                                                 Margin="0,0,16,0"/>
+                                        <ui:TextBox Grid.Column="1"
+                                                  Text="{Binding SqlDatabase}"/>
+                                    </Grid>
+                                    
+                                    <Grid Margin="0,0,0,10">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="Auto"/>
+                                            <ColumnDefinition Width="*"/>
+                                        </Grid.ColumnDefinitions>
+                                        <TextBlock Text="表名" 
+                                                 VerticalAlignment="Center"
+                                                 Margin="0,0,16,0"/>
+                                        <ui:TextBox Grid.Column="1"
+                                                  Text="{Binding SqlTable}"/>
+                                    </Grid>
+                                </StackPanel>
+                            </Expander>
+                        </StackPanel>
+                    </Grid>
+                </ui:Card>
+
+                <!-- 追踪设置 -->
+                <ui:Card Margin="0,0,0,16">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                        </Grid.RowDefinitions>
+                        
+                        <TextBlock Text="追踪设置" 
+                                 Style="{StaticResource CardTitleTextBlockStyle}"/>
+                        
+                        <StackPanel Grid.Row="1">
+                            <Grid Margin="0,0,0,10">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto"/>
+                                    <ColumnDefinition Width="*"/>
+                                </Grid.ColumnDefinitions>
+                                <TextBlock Text="保留原版等级系统" 
+                                         VerticalAlignment="Center"
+                                         Margin="0,0,16,0"/>
+                                <ui:ToggleSwitch Grid.Column="1"
+                                               IsChecked="{Binding VanillaTrace}"/>
+                            </Grid>
+                            
+                            <Grid Margin="0,0,0,10">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto"/>
+                                    <ColumnDefinition Width="*"/>
+                                </Grid.ColumnDefinitions>
+                                <TextBlock Text="默认等级组" 
+                                         VerticalAlignment="Center"
+                                         Margin="0,0,16,0"/>
+                                <ui:TextBox Grid.Column="1"
+                                          Text="{Binding DefaultTraceGroup}"/>
+                            </Grid>
+                            
+                            <Grid Margin="0,0,0,10">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto"/>
+                                    <ColumnDefinition Width="*"/>
+                                </Grid.ColumnDefinitions>
+                                <TextBlock Text="自动重置追踪等级组" 
+                                         VerticalAlignment="Center"
+                                         Margin="0,0,16,0"/>
+                                <ui:ToggleSwitch Grid.Column="1"
+                                               IsChecked="{Binding AutoResetTrace}"/>
+                            </Grid>
+                        </StackPanel>
+                    </Grid>
+                </ui:Card>
+
+                <!-- 队伍设置 -->
+                <ui:Card Margin="0,0,0,16">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                        </Grid.RowDefinitions>
+                        
+                        <TextBlock Text="队伍设置" 
+                                 Style="{StaticResource CardTitleTextBlockStyle}"/>
+                        
+                        <StackPanel Grid.Row="1">
+                            <Grid Margin="0,0,0,10">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto"/>
+                                    <ColumnDefinition Width="*"/>
+                                </Grid.ColumnDefinitions>
+                                <TextBlock Text="启用队伍经验共享" 
+                                         VerticalAlignment="Center"
+                                         Margin="0,0,16,0"/>
+                                <ui:ToggleSwitch Grid.Column="1"
+                                               IsChecked="{Binding TeamEnable}"/>
+                            </Grid>
+
+                            <Expander Header="组队插件设置" 
+                                    Margin="0,8,0,10"
+                                    Visibility="{Binding TeamEnable, Converter={StaticResource BooleanToVisibilityConverter}}">
+                                <StackPanel>
+                                    <Grid Margin="0,0,0,10">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="Auto"/>
+                                            <ColumnDefinition Width="*"/>
+                                        </Grid.ColumnDefinitions>
+                                        <TextBlock Text="组队插件" 
+                                                 VerticalAlignment="Center"
+                                                 Margin="0,0,16,0"/>
+                                        <ComboBox Grid.Column="1"
+                                                 ItemsSource="{Binding TeamPlugins}"
+                                                 SelectedItem="{Binding SelectedTeamPlugin}"/>
+                                    </Grid>
+
+                                    <Grid Margin="0,0,0,10">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="Auto"/>
+                                            <ColumnDefinition Width="*"/>
+                                        </Grid.ColumnDefinitions>
+                                        <TextBlock Text="经验来源" 
+                                                 VerticalAlignment="Center"
+                                                 Margin="0,0,16,0"/>
+                                        <ui:TextBox Grid.Column="1"
+                                                  Text="{Binding TeamSource}"/>
+                                    </Grid>
+
+                                    <Grid Margin="0,0,0,10">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="Auto"/>
+                                            <ColumnDefinition Width="*"/>
+                                        </Grid.ColumnDefinitions>
+                                        <TextBlock Text="经验计算公式" 
+                                                 VerticalAlignment="Center"
+                                                 Margin="0,0,16,0"/>
+                                        <ui:TextBox Grid.Column="1"
+                                                  Text="{Binding TeamFormula}"/>
+                                    </Grid>
+
+                                    <Grid Margin="0,0,0,10">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="Auto"/>
+                                            <ColumnDefinition Width="*"/>
+                                        </Grid.ColumnDefinitions>
+                                        <TextBlock Text="队长权重" 
+                                                 VerticalAlignment="Center"
+                                                 Margin="0,0,16,0"/>
+                                        <ui:NumberBox Grid.Column="1"
+                                                    Value="{Binding TeamLeaderWeight}"/>
+                                    </Grid>
+
+                                    <Grid Margin="0,0,0,10">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="Auto"/>
+                                            <ColumnDefinition Width="*"/>
+                                        </Grid.ColumnDefinitions>
+                                        <TextBlock Text="队员权重" 
+                                                 VerticalAlignment="Center"
+                                                 Margin="0,0,16,0"/>
+                                        <ui:NumberBox Grid.Column="1"
+                                                    Value="{Binding TeamMemberWeight}"/>
+                                    </Grid>
+                                </StackPanel>
+                            </Expander>
+                        </StackPanel>
+                    </Grid>
+                </ui:Card>
+
+                <!-- 属性设置 -->
+                <ui:Card Margin="0,0,0,16">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                        </Grid.RowDefinitions>
+                        
+                        <TextBlock Text="属性设置" 
+                                 Style="{StaticResource CardTitleTextBlockStyle}"/>
+                        
+                        <StackPanel Grid.Row="1">
+                            <Grid Margin="0,0,0,10">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto"/>
+                                    <ColumnDefinition Width="*"/>
+                                </Grid.ColumnDefinitions>
+                                <TextBlock Text="启用属性经验加成" 
+                                         VerticalAlignment="Center"
+                                         Margin="0,0,16,0"/>
+                                <ui:ToggleSwitch Grid.Column="1"
+                                               IsChecked="{Binding AttributeEnable}"/>
+                            </Grid>
+
+                            <Expander Header="属性插件设置" 
+                                    Margin="0,8,0,10"
+                                    Visibility="{Binding AttributeEnable, Converter={StaticResource BooleanToVisibilityConverter}}">
+                                <StackPanel>
+                                    <Grid Margin="0,0,0,10">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="Auto"/>
+                                            <ColumnDefinition Width="*"/>
+                                        </Grid.ColumnDefinitions>
+                                        <TextBlock Text="属性插件" 
+                                                 VerticalAlignment="Center"
+                                                 Margin="0,0,16,0"/>
+                                        <ComboBox Grid.Column="1"
+                                                 ItemsSource="{Binding AttributePlugins}"
+                                                 SelectedItem="{Binding SelectedAttributePlugin}"/>
+                                    </Grid>
+
+                                    <Grid Margin="0,0,0,10">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="Auto"/>
+                                            <ColumnDefinition Width="*"/>
+                                        </Grid.ColumnDefinitions>
+                                        <TextBlock Text="属性名称" 
+                                                 VerticalAlignment="Center"
+                                                 Margin="0,0,16,0"/>
+                                        <ui:TextBox Grid.Column="1"
+                                                  Text="{Binding AttributeName}"/>
+                                    </Grid>
+
+                                    <Grid Margin="0,0,0,10">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="Auto"/>
+                                            <ColumnDefinition Width="*"/>
+                                        </Grid.ColumnDefinitions>
+                                        <TextBlock Text="经验计算公式" 
+                                                 VerticalAlignment="Center"
+                                                 Margin="0,0,16,0"/>
+                                        <ui:TextBox Grid.Column="1"
+                                                  Text="{Binding AttributeFormula}"/>
+                                    </Grid>
+
+                                    <Grid Margin="0,0,0,10">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="Auto"/>
+                                            <ColumnDefinition Width="*"/>
+                                        </Grid.ColumnDefinitions>
+                                        <TextBlock Text="经验来源" 
+                                                 VerticalAlignment="Center"
+                                                 Margin="0,0,16,0"/>
+                                        <ui:TextBox Grid.Column="1"
+                                                  Text="{Binding AttributeSource}"/>
+                                    </Grid>
+                                </StackPanel>
+                            </Expander>
+                        </StackPanel>
+                    </Grid>
+                </ui:Card>
+
+                <!-- PlaceholderAPI 设置 -->
+                <ui:Card Margin="0,0,0,16">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                        </Grid.RowDefinitions>
+                        
+                        <TextBlock Text="PlaceholderAPI 设置" 
+                                 Style="{StaticResource CardTitleTextBlockStyle}"/>
+                        
+                        <StackPanel Grid.Row="1">
+                            <Grid Margin="0,0,0,10">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto"/>
+                                    <ColumnDefinition Width="*"/>
+                                </Grid.ColumnDefinitions>
+                                <TextBlock Text="变量前缀" 
+                                         VerticalAlignment="Center"
+                                         Margin="0,0,16,0"/>
+                                <ui:TextBox Grid.Column="1"
+                                          Text="{Binding PlaceholderPrefix}"/>
+                            </Grid>
+
+                            <Expander Header="经验条设置" Margin="0,8,0,10">
+                                <StackPanel>
+                                    <TextBlock Text="等级经验条" 
+                                             Style="{StaticResource SubTitleTextBlockStyle}"/>
+                                    
+                                    <Grid Margin="0,0,0,10">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="Auto"/>
+                                            <ColumnDefinition Width="*"/>
+                                        </Grid.ColumnDefinitions>
+                                        <TextBlock Text="空位符号" 
+                                                 VerticalAlignment="Center"
+                                                 Margin="0,0,16,0"/>
+                                        <ui:TextBox Grid.Column="1"
+                                                  Text="{Binding LevelBarEmpty}"/>
+                                    </Grid>
+
+                                    <Grid Margin="0,0,0,10">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="Auto"/>
+                                            <ColumnDefinition Width="*"/>
+                                        </Grid.ColumnDefinitions>
+                                        <TextBlock Text="填充符号" 
+                                                 VerticalAlignment="Center"
+                                                 Margin="0,0,16,0"/>
+                                        <ui:TextBox Grid.Column="1"
+                                                  Text="{Binding LevelBarFull}"/>
+                                    </Grid>
+
+                                    <Grid Margin="0,0,0,10">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="Auto"/>
+                                            <ColumnDefinition Width="*"/>
+                                        </Grid.ColumnDefinitions>
+                                        <TextBlock Text="长度" 
+                                                 VerticalAlignment="Center"
+                                                 Margin="0,0,16,0"/>
+                                        <ui:NumberBox Grid.Column="1"
+                                                    Value="{Binding LevelBarLength}"/>
+                                    </Grid>
+
+                                    <TextBlock Text="经验值经验条" 
+                                             Style="{StaticResource SubTitleTextBlockStyle}"
+                                             Margin="0,16,0,8"/>
+                                    
+                                    <Grid Margin="0,0,0,10">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="Auto"/>
+                                            <ColumnDefinition Width="*"/>
+                                        </Grid.ColumnDefinitions>
+                                        <TextBlock Text="空位符号" 
+                                                 VerticalAlignment="Center"
+                                                 Margin="0,0,16,0"/>
+                                        <ui:TextBox Grid.Column="1"
+                                                  Text="{Binding ExpBarEmpty}"/>
+                                    </Grid>
+
+                                    <Grid Margin="0,0,0,10">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="Auto"/>
+                                            <ColumnDefinition Width="*"/>
+                                        </Grid.ColumnDefinitions>
+                                        <TextBlock Text="填充符号" 
+                                                 VerticalAlignment="Center"
+                                                 Margin="0,0,16,0"/>
+                                        <ui:TextBox Grid.Column="1"
+                                                  Text="{Binding ExpBarFull}"/>
+                                    </Grid>
+
+                                    <Grid Margin="0,0,0,10">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="Auto"/>
+                                            <ColumnDefinition Width="*"/>
+                                        </Grid.ColumnDefinitions>
+                                        <TextBlock Text="长度" 
+                                                 VerticalAlignment="Center"
+                                                 Margin="0,0,16,0"/>
+                                        <ui:NumberBox Grid.Column="1"
+                                                    Value="{Binding ExpBarLength}"/>
+                                    </Grid>
+                                </StackPanel>
+                            </Expander>
+                        </StackPanel>
+                    </Grid>
+                </ui:Card>
+            </StackPanel>
+        </ScrollViewer>
+
+        <!-- 右侧预览区域 -->
+        <ui:Card Grid.Column="1" Margin="8">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="*" />
+                </Grid.RowDefinitions>
+
+                <TextBlock Text="预览"
+                           Style="{StaticResource CardTitleTextBlockStyle}" />
+
+                <TextBox Grid.Row="1"
+                         Text="{Binding PreviewText}"
+                         IsReadOnly="True"
+                         TextWrapping="Wrap"
+                         VerticalScrollBarVisibility="Auto"
+                         FontFamily="Consolas" />
+            </Grid>
         </ui:Card>
     </Grid>
 </Page>
