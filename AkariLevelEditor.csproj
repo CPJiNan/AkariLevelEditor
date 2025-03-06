@@ -26,11 +26,23 @@
     <ItemGroup>
         <None Remove="Resources\Preference.yml"/>
         <EmbeddedResource Include="Resources\Preferences.yml"/>
+        <None Remove="Fonts\fusion-pixel-8px-proportional-zh_hans.ttf"/>
+        <Resource Include="Fonts\fusion-pixel-8px-proportional-zh_hans.ttf"/>
+        <None Remove="Fonts\fusion-pixel-10px-monospaced-zh_hans.ttf"/>
+        <Resource Include="Fonts\fusion-pixel-10px-monospaced-zh_hans.ttf"/>
+        <None Remove="Fonts\fusion-pixel-10px-proportional-zh_hans.ttf"/>
+        <Resource Include="Fonts\fusion-pixel-10px-proportional-zh_hans.ttf"/>
+        <None Remove="Fonts\fusion-pixel-12px-monospaced-zh_hans.ttf"/>
+        <Resource Include="Fonts\fusion-pixel-12px-monospaced-zh_hans.ttf"/>
+        <None Remove="Fonts\fusion-pixel-12px-proportional-zh_hans.ttf"/>
+        <Resource Include="Fonts\fusion-pixel-12px-proportional-zh_hans.ttf"/>
     </ItemGroup>
 
     <ItemGroup>
         <None Remove="Resources\Icon.ico"/>
         <Resource Include="Resources\Icon.ico"/>
+        <None Remove="Fonts\fusion-pixel-8px-monospaced-zh_hans.ttf"/>
+        <Resource Include="Fonts\fusion-pixel-8px-monospaced-zh_hans.ttf"/>
     </ItemGroup>
 
 </Project>

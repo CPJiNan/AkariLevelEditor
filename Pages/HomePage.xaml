@@ -5,13 +5,13 @@
       HorizontalAlignment="Stretch"
       VerticalAlignment="Stretch">
     <Page.Resources>
-        <Style x:Key="TitleTextBlockStyle" TargetType="TextBlock">
+        <Style x:Key="TitleTextBlockStyle" TargetType="ui:TextBlock">
             <Setter Property="FontSize" Value="18" />
             <Setter Property="FontWeight" Value="SemiBold" />
             <Setter Property="Margin" Value="0,0,0,16" />
         </Style>
 
-        <Style x:Key="SubTitleTextBlockStyle" TargetType="TextBlock">
+        <Style x:Key="SubTitleTextBlockStyle" TargetType="ui:TextBlock">
             <Setter Property="FontSize" Value="16" />
             <Setter Property="FontWeight" Value="SemiBold" />
             <Setter Property="Margin" Value="0,0,0,8" />
@@ -35,8 +35,8 @@
                             <RowDefinition Height="Auto" />
                         </Grid.RowDefinitions>
 
-                        <TextBlock Text="全局设置"
-                                   Style="{StaticResource TitleTextBlockStyle}" />
+                        <ui:TextBlock Text="全局设置"
+                                      Style="{StaticResource TitleTextBlockStyle}" />
 
                         <StackPanel Grid.Row="1">
                             <Grid Margin="0,0,0,10">
@@ -44,9 +44,9 @@
                                     <ColumnDefinition Width="200" />
                                     <ColumnDefinition Width="*" />
                                 </Grid.ColumnDefinitions>
-                                <TextBlock Text="语言"
-                                           VerticalAlignment="Center"
-                                           Margin="0,0,16,0" />
+                                <ui:TextBlock Text="语言"
+                                              VerticalAlignment="Center"
+                                              Margin="0,0,16,0" />
                                 <ComboBox Grid.Column="1"
                                           ItemsSource="{Binding Languages}"
                                           SelectedItem="{Binding SelectedLanguage}" />
@@ -57,9 +57,9 @@
                                     <ColumnDefinition Width="200" />
                                     <ColumnDefinition Width="*" />
                                 </Grid.ColumnDefinitions>
-                                <TextBlock Text="配置文件版本"
-                                           VerticalAlignment="Center"
-                                           Margin="0,0,16,0" />
+                                <ui:TextBlock Text="配置文件版本"
+                                              VerticalAlignment="Center"
+                                              Margin="0,0,16,0" />
                                 <ui:TextBox Grid.Column="1"
                                             Text="{Binding ConfigVersion}" />
                             </Grid>
@@ -69,9 +69,9 @@
                                     <ColumnDefinition Width="200" />
                                     <ColumnDefinition Width="*" />
                                 </Grid.ColumnDefinitions>
-                                <TextBlock Text="检查版本更新"
-                                           VerticalAlignment="Center"
-                                           Margin="0,0,16,0" />
+                                <ui:TextBlock Text="检查版本更新"
+                                              VerticalAlignment="Center"
+                                              Margin="0,0,16,0" />
                                 <ui:ToggleSwitch Grid.Column="1"
                                                  IsChecked="{Binding CheckUpdate}" />
                             </Grid>
@@ -81,9 +81,9 @@
                                     <ColumnDefinition Width="200" />
                                     <ColumnDefinition Width="*" />
                                 </Grid.ColumnDefinitions>
-                                <TextBlock Text="OP 版本更新通知"
-                                           VerticalAlignment="Center"
-                                           Margin="0,0,16,0" />
+                                <ui:TextBlock Text="OP 版本更新通知"
+                                              VerticalAlignment="Center"
+                                              Margin="0,0,16,0" />
                                 <ui:ToggleSwitch Grid.Column="1"
                                                  IsChecked="{Binding OpNotify}" />
                             </Grid>
@@ -93,9 +93,9 @@
                                     <ColumnDefinition Width="200" />
                                     <ColumnDefinition Width="*" />
                                 </Grid.ColumnDefinitions>
-                                <TextBlock Text="启用 bStats 统计"
-                                           VerticalAlignment="Center"
-                                           Margin="0,0,16,0" />
+                                <ui:TextBlock Text="启用 bStats 统计"
+                                              VerticalAlignment="Center"
+                                              Margin="0,0,16,0" />
                                 <ui:ToggleSwitch Grid.Column="1"
                                                  IsChecked="{Binding SendMetrics}" />
                             </Grid>
@@ -105,9 +105,9 @@
                                     <ColumnDefinition Width="200" />
                                     <ColumnDefinition Width="*" />
                                 </Grid.ColumnDefinitions>
-                                <TextBlock Text="启用调试模式"
-                                           VerticalAlignment="Center"
-                                           Margin="0,0,16,0" />
+                                <ui:TextBlock Text="启用调试模式"
+                                              VerticalAlignment="Center"
+                                              Margin="0,0,16,0" />
                                 <ui:ToggleSwitch Grid.Column="1"
                                                  IsChecked="{Binding Debug}" />
                             </Grid>
@@ -123,8 +123,8 @@
                             <RowDefinition Height="Auto" />
                         </Grid.RowDefinitions>
 
-                        <TextBlock Text="数据库设置"
-                                   Style="{StaticResource TitleTextBlockStyle}" />
+                        <ui:TextBlock Text="数据库设置"
+                                      Style="{StaticResource TitleTextBlockStyle}" />
 
                         <StackPanel Grid.Row="1">
                             <Grid Margin="0,0,0,10">
@@ -132,9 +132,9 @@
                                     <ColumnDefinition Width="200" />
                                     <ColumnDefinition Width="*" />
                                 </Grid.ColumnDefinitions>
-                                <TextBlock Text="使用玩家 UUID 进行存储"
-                                           VerticalAlignment="Center"
-                                           Margin="0,0,16,0" />
+                                <ui:TextBlock Text="使用玩家 UUID 进行存储"
+                                              VerticalAlignment="Center"
+                                              Margin="0,0,16,0" />
                                 <ui:ToggleSwitch Grid.Column="1"
                                                  IsChecked="{Binding UseUuid}" />
                             </Grid>
@@ -144,9 +144,9 @@
                                     <ColumnDefinition Width="200" />
                                     <ColumnDefinition Width="*" />
                                 </Grid.ColumnDefinitions>
-                                <TextBlock Text="存储方式"
-                                           VerticalAlignment="Center"
-                                           Margin="0,0,16,0" />
+                                <ui:TextBlock Text="存储方式"
+                                              VerticalAlignment="Center"
+                                              Margin="0,0,16,0" />
                                 <ComboBox Grid.Column="1"
                                           ItemsSource="{Binding DatabaseMethods}"
                                           SelectedItem="{Binding SelectedDatabaseMethod}" />
@@ -162,9 +162,9 @@
                                         <ColumnDefinition Width="200" />
                                         <ColumnDefinition Width="*" />
                                     </Grid.ColumnDefinitions>
-                                    <TextBlock Text="文件路径"
-                                               VerticalAlignment="Center"
-                                               Margin="0,0,16,0" />
+                                    <ui:TextBlock Text="文件路径"
+                                                  VerticalAlignment="Center"
+                                                  Margin="0,0,16,0" />
                                     <ui:TextBox Grid.Column="1"
                                                 Text="{Binding JsonFilePath}" />
                                 </Grid>
@@ -181,9 +181,9 @@
                                             <ColumnDefinition Width="200" />
                                             <ColumnDefinition Width="*" />
                                         </Grid.ColumnDefinitions>
-                                        <TextBlock Text="主机"
-                                                   VerticalAlignment="Center"
-                                                   Margin="0,0,16,0" />
+                                        <ui:TextBlock Text="主机"
+                                                      VerticalAlignment="Center"
+                                                      Margin="0,0,16,0" />
                                         <ui:TextBox Grid.Column="1"
                                                     Text="{Binding SqlHost}" />
                                     </Grid>
@@ -193,9 +193,9 @@
                                             <ColumnDefinition Width="200" />
                                             <ColumnDefinition Width="*" />
                                         </Grid.ColumnDefinitions>
-                                        <TextBlock Text="端口"
-                                                   VerticalAlignment="Center"
-                                                   Margin="0,0,16,0" />
+                                        <ui:TextBlock Text="端口"
+                                                      VerticalAlignment="Center"
+                                                      Margin="0,0,16,0" />
                                         <ui:TextBox Grid.Column="1"
                                                     Text="{Binding SqlPort}" />
                                     </Grid>
@@ -205,9 +205,9 @@
                                             <ColumnDefinition Width="200" />
                                             <ColumnDefinition Width="*" />
                                         </Grid.ColumnDefinitions>
-                                        <TextBlock Text="用户名"
-                                                   VerticalAlignment="Center"
-                                                   Margin="0,0,16,0" />
+                                        <ui:TextBlock Text="用户名"
+                                                      VerticalAlignment="Center"
+                                                      Margin="0,0,16,0" />
                                         <ui:TextBox Grid.Column="1"
                                                     Text="{Binding SqlUser}" />
                                     </Grid>
@@ -217,11 +217,11 @@
                                             <ColumnDefinition Width="200" />
                                             <ColumnDefinition Width="*" />
                                         </Grid.ColumnDefinitions>
-                                        <TextBlock Text="密码"
-                                                   VerticalAlignment="Center"
-                                                   Margin="0,0,16,0" />
-                                        <ui:PasswordBox Grid.Column="1"
-                                                        Password="{Binding SqlPassword}" />
+                                        <ui:TextBlock Text="密码"
+                                                      VerticalAlignment="Center"
+                                                      Margin="0,0,16,0" />
+                                        <ui:TextBox Grid.Column="1"
+                                                    Text="{Binding SqlPassword}" />
                                     </Grid>
 
                                     <Grid Margin="0,0,0,10">
@@ -229,9 +229,9 @@
                                             <ColumnDefinition Width="200" />
                                             <ColumnDefinition Width="*" />
                                         </Grid.ColumnDefinitions>
-                                        <TextBlock Text="数据库"
-                                                   VerticalAlignment="Center"
-                                                   Margin="0,0,16,0" />
+                                        <ui:TextBlock Text="数据库"
+                                                      VerticalAlignment="Center"
+                                                      Margin="0,0,16,0" />
                                         <ui:TextBox Grid.Column="1"
                                                     Text="{Binding SqlDatabase}" />
                                     </Grid>
@@ -241,9 +241,9 @@
                                             <ColumnDefinition Width="200" />
                                             <ColumnDefinition Width="*" />
                                         </Grid.ColumnDefinitions>
-                                        <TextBlock Text="表名"
-                                                   VerticalAlignment="Center"
-                                                   Margin="0,0,16,0" />
+                                        <ui:TextBlock Text="表名"
+                                                      VerticalAlignment="Center"
+                                                      Margin="0,0,16,0" />
                                         <ui:TextBox Grid.Column="1"
                                                     Text="{Binding SqlTable}" />
                                     </Grid>
@@ -261,8 +261,8 @@
                             <RowDefinition Height="Auto" />
                         </Grid.RowDefinitions>
 
-                        <TextBlock Text="追踪设置"
-                                   Style="{StaticResource TitleTextBlockStyle}" />
+                        <ui:TextBlock Text="追踪设置"
+                                      Style="{StaticResource TitleTextBlockStyle}" />
 
                         <StackPanel Grid.Row="1">
                             <Grid Margin="0,0,0,10">
@@ -270,9 +270,9 @@
                                     <ColumnDefinition Width="200" />
                                     <ColumnDefinition Width="*" />
                                 </Grid.ColumnDefinitions>
-                                <TextBlock Text="保留原版等级系统"
-                                           VerticalAlignment="Center"
-                                           Margin="0,0,16,0" />
+                                <ui:TextBlock Text="保留原版等级系统"
+                                              VerticalAlignment="Center"
+                                              Margin="0,0,16,0" />
                                 <ui:ToggleSwitch Grid.Column="1"
                                                  IsChecked="{Binding VanillaTrace}" />
                             </Grid>
@@ -282,9 +282,9 @@
                                     <ColumnDefinition Width="200" />
                                     <ColumnDefinition Width="*" />
                                 </Grid.ColumnDefinitions>
-                                <TextBlock Text="默认等级组"
-                                           VerticalAlignment="Center"
-                                           Margin="0,0,16,0" />
+                                <ui:TextBlock Text="默认等级组"
+                                              VerticalAlignment="Center"
+                                              Margin="0,0,16,0" />
                                 <ui:TextBox Grid.Column="1"
                                             Text="{Binding DefaultTraceGroup}" />
                             </Grid>
@@ -294,9 +294,9 @@
                                     <ColumnDefinition Width="200" />
                                     <ColumnDefinition Width="*" />
                                 </Grid.ColumnDefinitions>
-                                <TextBlock Text="自动重置追踪等级组"
-                                           VerticalAlignment="Center"
-                                           Margin="0,0,16,0" />
+                                <ui:TextBlock Text="自动重置追踪等级组"
+                                              VerticalAlignment="Center"
+                                              Margin="0,0,16,0" />
                                 <ui:ToggleSwitch Grid.Column="1"
                                                  IsChecked="{Binding AutoResetTrace}" />
                             </Grid>
@@ -312,8 +312,8 @@
                             <RowDefinition Height="Auto" />
                         </Grid.RowDefinitions>
 
-                        <TextBlock Text="队伍设置"
-                                   Style="{StaticResource TitleTextBlockStyle}" />
+                        <ui:TextBlock Text="队伍设置"
+                                      Style="{StaticResource TitleTextBlockStyle}" />
 
                         <StackPanel Grid.Row="1">
                             <Grid Margin="0,0,0,10">
@@ -321,9 +321,9 @@
                                     <ColumnDefinition Width="200" />
                                     <ColumnDefinition Width="*" />
                                 </Grid.ColumnDefinitions>
-                                <TextBlock Text="启用队伍经验共享"
-                                           VerticalAlignment="Center"
-                                           Margin="0,0,16,0" />
+                                <ui:TextBlock Text="启用队伍经验共享"
+                                              VerticalAlignment="Center"
+                                              Margin="0,0,16,0" />
                                 <ui:ToggleSwitch Grid.Column="1"
                                                  IsChecked="{Binding TeamEnable}" />
                             </Grid>
@@ -338,9 +338,9 @@
                                             <ColumnDefinition Width="200" />
                                             <ColumnDefinition Width="*" />
                                         </Grid.ColumnDefinitions>
-                                        <TextBlock Text="组队插件"
-                                                   VerticalAlignment="Center"
-                                                   Margin="0,0,16,0" />
+                                        <ui:TextBlock Text="组队插件"
+                                                      VerticalAlignment="Center"
+                                                      Margin="0,0,16,0" />
                                         <ComboBox Grid.Column="1"
                                                   ItemsSource="{Binding TeamPlugins}"
                                                   SelectedItem="{Binding SelectedTeamPlugin}" />
@@ -351,9 +351,9 @@
                                             <ColumnDefinition Width="200" />
                                             <ColumnDefinition Width="*" />
                                         </Grid.ColumnDefinitions>
-                                        <TextBlock Text="经验来源"
-                                                   VerticalAlignment="Center"
-                                                   Margin="0,0,16,0" />
+                                        <ui:TextBlock Text="经验来源"
+                                                      VerticalAlignment="Center"
+                                                      Margin="0,0,16,0" />
                                         <ui:TextBox Grid.Column="1"
                                                     Text="{Binding TeamSource}"
                                                     AcceptsReturn="True"
@@ -367,9 +367,9 @@
                                             <ColumnDefinition Width="200" />
                                             <ColumnDefinition Width="*" />
                                         </Grid.ColumnDefinitions>
-                                        <TextBlock Text="经验计算公式"
-                                                   VerticalAlignment="Center"
-                                                   Margin="0,0,16,0" />
+                                        <ui:TextBlock Text="经验计算公式"
+                                                      VerticalAlignment="Center"
+                                                      Margin="0,0,16,0" />
                                         <ui:TextBox Grid.Column="1"
                                                     Text="{Binding TeamFormula}" />
                                     </Grid>
@@ -379,11 +379,11 @@
                                             <ColumnDefinition Width="200" />
                                             <ColumnDefinition Width="*" />
                                         </Grid.ColumnDefinitions>
-                                        <TextBlock Text="队长权重"
-                                                   VerticalAlignment="Center"
-                                                   Margin="0,0,16,0" />
-                                        <ui:NumberBox Grid.Column="1"
-                                                      Value="{Binding TeamLeaderWeight}" />
+                                        <ui:TextBlock Text="队长权重"
+                                                      VerticalAlignment="Center"
+                                                      Margin="0,0,16,0" />
+                                        <ui:TextBox Grid.Column="1"
+                                                    Text="{Binding TeamLeaderWeight}" />
                                     </Grid>
 
                                     <Grid Margin="0,0,0,10">
@@ -391,9 +391,9 @@
                                             <ColumnDefinition Width="200" />
                                             <ColumnDefinition Width="*" />
                                         </Grid.ColumnDefinitions>
-                                        <TextBlock Text="队员权重"
-                                                   VerticalAlignment="Center"
-                                                   Margin="0,0,16,0" />
+                                        <ui:TextBlock Text="队员权重"
+                                                      VerticalAlignment="Center"
+                                                      Margin="0,0,16,0" />
                                         <ui:TextBox Grid.Column="1"
                                                     Text="{Binding TeamMemberWeight}" />
                                     </Grid>
@@ -411,8 +411,8 @@
                             <RowDefinition Height="Auto" />
                         </Grid.RowDefinitions>
 
-                        <TextBlock Text="属性设置"
-                                   Style="{StaticResource TitleTextBlockStyle}" />
+                        <ui:TextBlock Text="属性设置"
+                                      Style="{StaticResource TitleTextBlockStyle}" />
 
                         <StackPanel Grid.Row="1">
                             <Grid Margin="0,0,0,10">
@@ -420,9 +420,9 @@
                                     <ColumnDefinition Width="200" />
                                     <ColumnDefinition Width="*" />
                                 </Grid.ColumnDefinitions>
-                                <TextBlock Text="启用属性经验加成"
-                                           VerticalAlignment="Center"
-                                           Margin="0,0,16,0" />
+                                <ui:TextBlock Text="启用属性经验加成"
+                                              VerticalAlignment="Center"
+                                              Margin="0,0,16,0" />
                                 <ui:ToggleSwitch Grid.Column="1"
                                                  IsChecked="{Binding AttributeEnable}" />
                             </Grid>
@@ -437,9 +437,9 @@
                                             <ColumnDefinition Width="200" />
                                             <ColumnDefinition Width="*" />
                                         </Grid.ColumnDefinitions>
-                                        <TextBlock Text="属性插件"
-                                                   VerticalAlignment="Center"
-                                                   Margin="0,0,16,0" />
+                                        <ui:TextBlock Text="属性插件"
+                                                      VerticalAlignment="Center"
+                                                      Margin="0,0,16,0" />
                                         <ComboBox Grid.Column="1"
                                                   ItemsSource="{Binding AttributePlugins}"
                                                   SelectedItem="{Binding SelectedAttributePlugin}" />
@@ -450,9 +450,9 @@
                                             <ColumnDefinition Width="200" />
                                             <ColumnDefinition Width="*" />
                                         </Grid.ColumnDefinitions>
-                                        <TextBlock Text="属性名称"
-                                                   VerticalAlignment="Center"
-                                                   Margin="0,0,16,0" />
+                                        <ui:TextBlock Text="属性名称"
+                                                      VerticalAlignment="Center"
+                                                      Margin="0,0,16,0" />
                                         <ui:TextBox Grid.Column="1"
                                                     Text="{Binding AttributeName}" />
                                     </Grid>
@@ -462,9 +462,9 @@
                                             <ColumnDefinition Width="200" />
                                             <ColumnDefinition Width="*" />
                                         </Grid.ColumnDefinitions>
-                                        <TextBlock Text="经验计算公式"
-                                                   VerticalAlignment="Center"
-                                                   Margin="0,0,16,0" />
+                                        <ui:TextBlock Text="经验计算公式"
+                                                      VerticalAlignment="Center"
+                                                      Margin="0,0,16,0" />
                                         <ui:TextBox Grid.Column="1"
                                                     Text="{Binding AttributeFormula}" />
                                     </Grid>
@@ -474,9 +474,9 @@
                                             <ColumnDefinition Width="200" />
                                             <ColumnDefinition Width="*" />
                                         </Grid.ColumnDefinitions>
-                                        <TextBlock Text="经验来源"
-                                                   VerticalAlignment="Center"
-                                                   Margin="0,0,16,0" />
+                                        <ui:TextBlock Text="经验来源"
+                                                      VerticalAlignment="Center"
+                                                      Margin="0,0,16,0" />
                                         <ui:TextBox Grid.Column="1"
                                                     Text="{Binding AttributeSource}"
                                                     AcceptsReturn="True"
@@ -498,8 +498,8 @@
                             <RowDefinition Height="Auto" />
                         </Grid.RowDefinitions>
 
-                        <TextBlock Text="PlaceholderAPI 设置"
-                                   Style="{StaticResource TitleTextBlockStyle}" />
+                        <ui:TextBlock Text="PlaceholderAPI 设置"
+                                      Style="{StaticResource TitleTextBlockStyle}" />
 
                         <StackPanel Grid.Row="1">
                             <Grid Margin="0,0,0,10">
@@ -507,9 +507,9 @@
                                     <ColumnDefinition Width="200" />
                                     <ColumnDefinition Width="*" />
                                 </Grid.ColumnDefinitions>
-                                <TextBlock Text="变量前缀"
-                                           VerticalAlignment="Center"
-                                           Margin="0,0,16,0" />
+                                <ui:TextBlock Text="变量前缀"
+                                              VerticalAlignment="Center"
+                                              Margin="0,0,16,0" />
                                 <ui:TextBox Grid.Column="1"
                                             Text="{Binding PlaceholderPrefix}" />
                             </Grid>
@@ -518,17 +518,17 @@
                                       Margin="0,8,0,10"
                                       IsExpanded="True">
                                 <StackPanel>
-                                    <TextBlock Text="等级经验条"
-                                               Style="{StaticResource SubTitleTextBlockStyle}" />
+                                    <ui:TextBlock Text="等级经验条"
+                                                  Style="{StaticResource SubTitleTextBlockStyle}" />
 
                                     <Grid Margin="0,0,0,10">
                                         <Grid.ColumnDefinitions>
                                             <ColumnDefinition Width="200" />
                                             <ColumnDefinition Width="*" />
                                         </Grid.ColumnDefinitions>
-                                        <TextBlock Text="空位符号"
-                                                   VerticalAlignment="Center"
-                                                   Margin="0,0,16,0" />
+                                        <ui:TextBlock Text="空位符号"
+                                                      VerticalAlignment="Center"
+                                                      Margin="0,0,16,0" />
                                         <ui:TextBox Grid.Column="1"
                                                     Text="{Binding LevelBarEmpty}" />
                                     </Grid>
@@ -538,9 +538,9 @@
                                             <ColumnDefinition Width="200" />
                                             <ColumnDefinition Width="*" />
                                         </Grid.ColumnDefinitions>
-                                        <TextBlock Text="填充符号"
-                                                   VerticalAlignment="Center"
-                                                   Margin="0,0,16,0" />
+                                        <ui:TextBlock Text="填充符号"
+                                                      VerticalAlignment="Center"
+                                                      Margin="0,0,16,0" />
                                         <ui:TextBox Grid.Column="1"
                                                     Text="{Binding LevelBarFull}" />
                                     </Grid>
@@ -550,25 +550,25 @@
                                             <ColumnDefinition Width="200" />
                                             <ColumnDefinition Width="*" />
                                         </Grid.ColumnDefinitions>
-                                        <TextBlock Text="长度"
-                                                   VerticalAlignment="Center"
-                                                   Margin="0,0,16,0" />
+                                        <ui:TextBlock Text="长度"
+                                                      VerticalAlignment="Center"
+                                                      Margin="0,0,16,0" />
                                         <ui:TextBox Grid.Column="1"
                                                     Text="{Binding LevelBarLength}" />
                                     </Grid>
 
-                                    <TextBlock Text="经验值经验条"
-                                               Style="{StaticResource SubTitleTextBlockStyle}"
-                                               Margin="0,16,0,8" />
+                                    <ui:TextBlock Text="经验值经验条"
+                                                  Style="{StaticResource SubTitleTextBlockStyle}"
+                                                  Margin="0,16,0,8" />
 
                                     <Grid Margin="0,0,0,10">
                                         <Grid.ColumnDefinitions>
                                             <ColumnDefinition Width="200" />
                                             <ColumnDefinition Width="*" />
                                         </Grid.ColumnDefinitions>
-                                        <TextBlock Text="空位符号"
-                                                   VerticalAlignment="Center"
-                                                   Margin="0,0,16,0" />
+                                        <ui:TextBlock Text="空位符号"
+                                                      VerticalAlignment="Center"
+                                                      Margin="0,0,16,0" />
                                         <ui:TextBox Grid.Column="1"
                                                     Text="{Binding ExpBarEmpty}" />
                                     </Grid>
@@ -578,9 +578,9 @@
                                             <ColumnDefinition Width="200" />
                                             <ColumnDefinition Width="*" />
                                         </Grid.ColumnDefinitions>
-                                        <TextBlock Text="填充符号"
-                                                   VerticalAlignment="Center"
-                                                   Margin="0,0,16,0" />
+                                        <ui:TextBlock Text="填充符号"
+                                                      VerticalAlignment="Center"
+                                                      Margin="0,0,16,0" />
                                         <ui:TextBox Grid.Column="1"
                                                     Text="{Binding ExpBarFull}" />
                                     </Grid>
@@ -590,9 +590,9 @@
                                             <ColumnDefinition Width="200" />
                                             <ColumnDefinition Width="*" />
                                         </Grid.ColumnDefinitions>
-                                        <TextBlock Text="长度"
-                                                   VerticalAlignment="Center"
-                                                   Margin="0,0,16,0" />
+                                        <ui:TextBlock Text="长度"
+                                                      VerticalAlignment="Center"
+                                                      Margin="0,0,16,0" />
                                         <ui:TextBox Grid.Column="1"
                                                     Text="{Binding ExpBarLength}" />
                                     </Grid>
@@ -605,22 +605,22 @@
         </ScrollViewer>
 
         <!-- 预览区域 -->
-        <ui:Card Grid.Column="1" Margin="8">
+        <ui:Card Grid.Column="1" Margin="8" VerticalAlignment="Top">
             <Grid>
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto" />
                     <RowDefinition Height="*" />
                 </Grid.RowDefinitions>
 
-                <TextBlock Text="预览"
-                           Style="{StaticResource TitleTextBlockStyle}" />
+                <ui:TextBlock Text="预览"
+                              Style="{StaticResource TitleTextBlockStyle}" />
 
                 <TextBox Grid.Row="1"
                          Text="{Binding PreviewText}"
                          IsReadOnly="True"
                          TextWrapping="Wrap"
                          VerticalScrollBarVisibility="Auto"
-                         FontFamily="Consolas" />
+                         FontFamily="pack://application:,,,/Fonts/#Fusion Pixel 12px Monospaced zh_hans" />
             </Grid>
         </ui:Card>
     </Grid>
