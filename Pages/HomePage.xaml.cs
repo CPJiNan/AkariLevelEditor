@@ -2,6 +2,8 @@
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using System.Windows.Input;
+using System.Windows;
+using MessageBox = Wpf.Ui.Controls.MessageBox;
 
 namespace AkariLevelEditor.Pages;
 
@@ -725,6 +727,27 @@ public partial class HomePage : INotifyPropertyChanged
     public ICommand ResetExpBarEmpty => new RelayCommand(() => ExpBarEmpty = DefaultExpBarEmpty);
     public ICommand ResetExpBarFull => new RelayCommand(() => ExpBarFull = DefaultExpBarFull);
     public ICommand ResetExpBarLength => new RelayCommand(() => ExpBarLength = DefaultExpBarLength);
+
+    public ICommand ExportCommand => new RelayCommand(() =>
+    {
+        try
+        {
+            Clipboard.SetText(PreviewText ?? string.Empty);
+
+            var dialog = new MessageBox
+            {
+                Title = "导出成功",
+                Content = "已将配置内容复制到剪贴板！",
+                CloseButtonText = "确认"
+            };
+
+            dialog.ShowDialogAsync();
+        }
+        catch (Exception ex)
+        {
+            // ignored
+        }
+    });
 
     private class RelayCommand(Action execute) : ICommand
     {

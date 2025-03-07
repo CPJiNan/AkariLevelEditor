@@ -5,7 +5,7 @@
       HorizontalAlignment="Stretch"
       VerticalAlignment="Stretch">
     <Page.Resources>
-        <ui:SymbolIcon x:Key="ArrowResetIcon" Symbol="ArrowReset48" x:Shared="False" />
+        <ui:SymbolIcon x:Key="ArrowResetIcon" Symbol="ArrowReset32" x:Shared="False" />
 
         <Style x:Key="TitleTextBlockStyle" TargetType="ui:TextBlock">
             <Setter Property="FontSize" Value="18" />
@@ -812,13 +812,26 @@
             <Grid>
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
                     <RowDefinition Height="*" />
                 </Grid.RowDefinitions>
 
                 <ui:TextBlock Text="预览"
                               Style="{StaticResource TitleTextBlockStyle}" />
 
-                <TextBox Grid.Row="1"
+                <StackPanel Grid.Row="1"
+                            Orientation="Horizontal"
+                            Margin="0,0,0,8">
+                    <ui:Button Content="导入"
+                               Height="32"
+                               Icon="{ui:SymbolIcon ArrowImport24}" />
+                    <ui:Button Content="导出"
+                               Margin="8,0,0,0"
+                               Height="32"
+                               Icon="{ui:SymbolIcon ArrowExportLtr24}" />
+                </StackPanel>
+
+                <TextBox Grid.Row="2"
                          Text="{Binding PreviewText}"
                          IsReadOnly="True"
                          TextWrapping="Wrap"
