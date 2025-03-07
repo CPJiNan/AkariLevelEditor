@@ -644,12 +644,10 @@ public partial class HomePage : INotifyPropertyChanged
     protected virtual void OnPropertyChanged([CallerMemberName] string? propertyName = null)
     {
         PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-        // 当属性值改变时，同时触发对应的 IsDefault 属性改变
         if (propertyName != null)
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs($"Is{propertyName}Default"));
     }
 
-    // 为每个属性添加 IsDefault 属性
     public bool IsLanguageDefault => SelectedLanguage == DefaultLanguage;
     public bool IsConfigVersionDefault => ConfigVersion == DefaultConfigVersion;
     public bool IsCheckUpdateDefault => CheckUpdate == DefaultCheckUpdate;
