@@ -824,7 +824,8 @@
                             Margin="0,0,0,8">
                     <ui:Button Content="导入"
                                Height="32"
-                               Icon="{ui:SymbolIcon ArrowImport24}" />
+                               Icon="{ui:SymbolIcon ArrowImport24}"
+                               Command="{Binding ImportCommand}" />
                     <ui:Button Content="导出"
                                Margin="8,0,0,0"
                                Height="32"

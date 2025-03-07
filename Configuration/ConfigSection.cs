@@ -252,11 +252,8 @@ public class ConfigSection : IConfigurationSection
         var val = Get(path, def);
         if (val is int intValue)
             return intValue;
-        else if (val is string str)
-            if (int.TryParse(str, out intValue))
-                return intValue;
-
-        return def;
+        if (val is not string str) return def;
+        return int.TryParse(str, out intValue) ? intValue : def;
     }
 
     public bool IsInt(string path)
@@ -274,7 +271,10 @@ public class ConfigSection : IConfigurationSection
     public bool? GetBoolean(string path, bool? def)
     {
         var val = Get(path, def);
-        return val as bool? ?? def;
+        if (val is bool boolValue)
+            return boolValue;
+        if (val is not string str) return def;
+        return bool.TryParse(str, out var booleanValue) ? booleanValue : def;
     }
 
     public bool IsBoolean(string path)
