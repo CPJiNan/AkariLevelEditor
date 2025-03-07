@@ -647,7 +647,7 @@ public partial class HomePage : INotifyPropertyChanged
         if (propertyName != null)
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs($"Is{propertyName}Default"));
     }
-
+    
     public bool IsLanguageDefault => SelectedLanguage == DefaultLanguage;
     public bool IsConfigVersionDefault => ConfigVersion == DefaultConfigVersion;
     public bool IsCheckUpdateDefault => CheckUpdate == DefaultCheckUpdate;
