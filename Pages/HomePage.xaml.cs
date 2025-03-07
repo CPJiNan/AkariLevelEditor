@@ -1,11 +1,56 @@
 ﻿using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
+using System.Windows.Input;
 
 namespace AkariLevelEditor.Pages;
 
 public partial class HomePage : INotifyPropertyChanged
 {
+    public HomePage()
+    {
+        InitializeComponent();
+        DataContext = this;
+        UpdatePreview();
+    }
+
+    private const string DefaultLanguage = "zh_CN";
+    private const int DefaultConfigVersion = 6;
+    private const bool DefaultCheckUpdate = true;
+    private const bool DefaultOpNotify = true;
+    private const bool DefaultSendMetrics = true;
+    private const bool DefaultDebug = false;
+    private const bool DefaultUseUuid = false;
+    private const string DefaultDatabaseMethod = "JSON";
+    private const string DefaultJsonFilePath = "database.json";
+    private const string DefaultSqlHost = "localhost";
+    private const int DefaultSqlPort = 3306;
+    private const string DefaultSqlUser = "root";
+    private const string DefaultSqlPassword = "password";
+    private const string DefaultSqlDatabase = "minecraft";
+    private const string DefaultSqlTable = "akarilevel";
+    private const bool DefaultVanillaTrace = false;
+    private const string DefaultDefaultTraceGroup = "";
+    private const bool DefaultAutoResetTrace = true;
+    private const bool DefaultTeamEnable = false;
+    private const string DefaultTeamPlugin = "DungeonPlus";
+    private const string DefaultTeamSource = "MYTHICMOBS_DROP_EXP";
+    private const string DefaultTeamFormula = "%exp% * %size%";
+    private const int DefaultTeamLeaderWeight = 1;
+    private const int DefaultTeamMemberWeight = 1;
+    private const bool DefaultAttributeEnable = false;
+    private const string DefaultAttributePlugin = "AttributePlus";
+    private const string DefaultAttributeName = "经验加成";
+    private const string DefaultAttributeFormula = "%exp% * ( 1 + %attribute% / 100 )";
+    private const string DefaultAttributeSource = "MYTHICMOBS_DROP_EXP\nVANILLA_EXP_CHANGE";
+    private const string DefaultPlaceholderPrefix = "akarilevel";
+    private const string DefaultLevelBarEmpty = "□";
+    private const string DefaultLevelBarFull = "■";
+    private const int DefaultLevelBarLength = 10;
+    private const string DefaultExpBarEmpty = "□";
+    private const string DefaultExpBarFull = "■";
+    private const int DefaultExpBarLength = 10;
+
     private string _selectedLanguage = "zh_CN";
     private int _configVersion = 6;
     private bool _checkUpdate = true;
@@ -28,8 +73,8 @@ public partial class HomePage : INotifyPropertyChanged
     private string _selectedTeamPlugin = "DungeonPlus";
     private string _teamSource = "MYTHICMOBS_DROP_EXP";
     private string _teamFormula = "%exp% * %size%";
-    private double _teamLeaderWeight = 1;
-    private double _teamMemberWeight = 1;
+    private int _teamLeaderWeight = 1;
+    private int _teamMemberWeight = 1;
     private bool _attributeEnable;
     private string _selectedAttributePlugin = "AttributePlus";
     private string _attributeName = "经验加成";
@@ -292,7 +337,7 @@ public partial class HomePage : INotifyPropertyChanged
         }
     }
 
-    public double TeamLeaderWeight
+    public int TeamLeaderWeight
     {
         get => _teamLeaderWeight;
         set
@@ -303,7 +348,7 @@ public partial class HomePage : INotifyPropertyChanged
         }
     }
 
-    public double TeamMemberWeight
+    public int TeamMemberWeight
     {
         get => _teamMemberWeight;
         set
@@ -458,13 +503,6 @@ public partial class HomePage : INotifyPropertyChanged
         }
     }
 
-    public HomePage()
-    {
-        InitializeComponent();
-        DataContext = this;
-        UpdatePreview();
-    }
-
     private void UpdatePreview()
     {
         PreviewText = $"""
@@ -606,5 +644,102 @@ public partial class HomePage : INotifyPropertyChanged
     protected virtual void OnPropertyChanged([CallerMemberName] string? propertyName = null)
     {
         PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        // 当属性值改变时，同时触发对应的 IsDefault 属性改变
+        if (propertyName != null)
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs($"Is{propertyName}Default"));
+    }
+
+    // 为每个属性添加 IsDefault 属性
+    public bool IsLanguageDefault => SelectedLanguage == DefaultLanguage;
+    public bool IsConfigVersionDefault => ConfigVersion == DefaultConfigVersion;
+    public bool IsCheckUpdateDefault => CheckUpdate == DefaultCheckUpdate;
+    public bool IsOpNotifyDefault => OpNotify == DefaultOpNotify;
+    public bool IsSendMetricsDefault => SendMetrics == DefaultSendMetrics;
+    public bool IsDebugDefault => Debug == DefaultDebug;
+    public bool IsUseUuidDefault => UseUuid == DefaultUseUuid;
+    public bool IsDatabaseMethodDefault => SelectedDatabaseMethod == DefaultDatabaseMethod;
+    public bool IsJsonFilePathDefault => JsonFilePath == DefaultJsonFilePath;
+    public bool IsSqlHostDefault => SqlHost == DefaultSqlHost;
+    public bool IsSqlPortDefault => SqlPort == DefaultSqlPort;
+    public bool IsSqlUserDefault => SqlUser == DefaultSqlUser;
+    public bool IsSqlPasswordDefault => SqlPassword == DefaultSqlPassword;
+    public bool IsSqlDatabaseDefault => SqlDatabase == DefaultSqlDatabase;
+    public bool IsSqlTableDefault => SqlTable == DefaultSqlTable;
+    public bool IsVanillaTraceDefault => VanillaTrace == DefaultVanillaTrace;
+    public bool IsDefaultTraceGroupDefault => DefaultTraceGroup == DefaultDefaultTraceGroup;
+    public bool IsAutoResetTraceDefault => AutoResetTrace == DefaultAutoResetTrace;
+    public bool IsTeamEnableDefault => TeamEnable == DefaultTeamEnable;
+    public bool IsTeamPluginDefault => SelectedTeamPlugin == DefaultTeamPlugin;
+    public bool IsTeamSourceDefault => TeamSource == DefaultTeamSource;
+    public bool IsTeamFormulaDefault => TeamFormula == DefaultTeamFormula;
+    public bool IsTeamLeaderWeightDefault => TeamLeaderWeight == DefaultTeamLeaderWeight;
+    public bool IsTeamMemberWeightDefault => TeamMemberWeight == DefaultTeamMemberWeight;
+    public bool IsAttributeEnableDefault => AttributeEnable == DefaultAttributeEnable;
+    public bool IsAttributePluginDefault => SelectedAttributePlugin == DefaultAttributePlugin;
+    public bool IsAttributeNameDefault => AttributeName == DefaultAttributeName;
+    public bool IsAttributeFormulaDefault => AttributeFormula == DefaultAttributeFormula;
+    public bool IsAttributeSourceDefault => AttributeSource == DefaultAttributeSource;
+    public bool IsPlaceholderPrefixDefault => PlaceholderPrefix == DefaultPlaceholderPrefix;
+    public bool IsLevelBarEmptyDefault => LevelBarEmpty == DefaultLevelBarEmpty;
+    public bool IsLevelBarFullDefault => LevelBarFull == DefaultLevelBarFull;
+    public bool IsLevelBarLengthDefault => LevelBarLength == DefaultLevelBarLength;
+    public bool IsExpBarEmptyDefault => ExpBarEmpty == DefaultExpBarEmpty;
+    public bool IsExpBarFullDefault => ExpBarFull == DefaultExpBarFull;
+    public bool IsExpBarLengthDefault => ExpBarLength == DefaultExpBarLength;
+
+    public ICommand ResetLanguage => new RelayCommand(() => SelectedLanguage = DefaultLanguage);
+    public ICommand ResetConfigVersion => new RelayCommand(() => ConfigVersion = DefaultConfigVersion);
+    public ICommand ResetCheckUpdate => new RelayCommand(() => CheckUpdate = DefaultCheckUpdate);
+    public ICommand ResetOpNotify => new RelayCommand(() => OpNotify = DefaultOpNotify);
+    public ICommand ResetSendMetrics => new RelayCommand(() => SendMetrics = DefaultSendMetrics);
+    public ICommand ResetDebug => new RelayCommand(() => Debug = DefaultDebug);
+    public ICommand ResetUseUuid => new RelayCommand(() => UseUuid = DefaultUseUuid);
+    public ICommand ResetDatabaseMethod => new RelayCommand(() => SelectedDatabaseMethod = DefaultDatabaseMethod);
+    public ICommand ResetJsonFilePath => new RelayCommand(() => JsonFilePath = DefaultJsonFilePath);
+    public ICommand ResetSqlHost => new RelayCommand(() => SqlHost = DefaultSqlHost);
+    public ICommand ResetSqlPort => new RelayCommand(() => SqlPort = DefaultSqlPort);
+    public ICommand ResetSqlUser => new RelayCommand(() => SqlUser = DefaultSqlUser);
+    public ICommand ResetSqlPassword => new RelayCommand(() => SqlPassword = DefaultSqlPassword);
+    public ICommand ResetSqlDatabase => new RelayCommand(() => SqlDatabase = DefaultSqlDatabase);
+    public ICommand ResetSqlTable => new RelayCommand(() => SqlTable = DefaultSqlTable);
+    public ICommand ResetVanillaTrace => new RelayCommand(() => VanillaTrace = DefaultVanillaTrace);
+    public ICommand ResetDefaultTraceGroup => new RelayCommand(() => DefaultTraceGroup = DefaultDefaultTraceGroup);
+    public ICommand ResetAutoResetTrace => new RelayCommand(() => AutoResetTrace = DefaultAutoResetTrace);
+    public ICommand ResetTeamEnable => new RelayCommand(() => TeamEnable = DefaultTeamEnable);
+    public ICommand ResetTeamPlugin => new RelayCommand(() => SelectedTeamPlugin = DefaultTeamPlugin);
+    public ICommand ResetTeamSource => new RelayCommand(() => TeamSource = DefaultTeamSource);
+    public ICommand ResetTeamFormula => new RelayCommand(() => TeamFormula = DefaultTeamFormula);
+    public ICommand ResetTeamLeaderWeight => new RelayCommand(() => TeamLeaderWeight = DefaultTeamLeaderWeight);
+    public ICommand ResetTeamMemberWeight => new RelayCommand(() => TeamMemberWeight = DefaultTeamMemberWeight);
+    public ICommand ResetAttributeEnable => new RelayCommand(() => AttributeEnable = DefaultAttributeEnable);
+    public ICommand ResetAttributePlugin => new RelayCommand(() => SelectedAttributePlugin = DefaultAttributePlugin);
+    public ICommand ResetAttributeName => new RelayCommand(() => AttributeName = DefaultAttributeName);
+    public ICommand ResetAttributeFormula => new RelayCommand(() => AttributeFormula = DefaultAttributeFormula);
+    public ICommand ResetAttributeSource => new RelayCommand(() => AttributeSource = DefaultAttributeSource);
+    public ICommand ResetPlaceholderPrefix => new RelayCommand(() => PlaceholderPrefix = DefaultPlaceholderPrefix);
+    public ICommand ResetLevelBarEmpty => new RelayCommand(() => LevelBarEmpty = DefaultLevelBarEmpty);
+    public ICommand ResetLevelBarFull => new RelayCommand(() => LevelBarFull = DefaultLevelBarFull);
+    public ICommand ResetLevelBarLength => new RelayCommand(() => LevelBarLength = DefaultLevelBarLength);
+    public ICommand ResetExpBarEmpty => new RelayCommand(() => ExpBarEmpty = DefaultExpBarEmpty);
+    public ICommand ResetExpBarFull => new RelayCommand(() => ExpBarFull = DefaultExpBarFull);
+    public ICommand ResetExpBarLength => new RelayCommand(() => ExpBarLength = DefaultExpBarLength);
+
+    private class RelayCommand(Action execute) : ICommand
+    {
+        public bool CanExecute(object? parameter)
+        {
+            return true;
+        }
+
+        public void Execute(object? parameter)
+        {
+            execute();
+        }
+
+        public event EventHandler? CanExecuteChanged
+        {
+            add { }
+            remove { }
+        }
     }
 }
