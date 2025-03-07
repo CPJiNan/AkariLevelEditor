@@ -10,6 +10,7 @@ public partial class HomePage : INotifyPropertyChanged
     public HomePage()
     {
         InitializeComponent();
+
         DataContext = this;
         UpdatePreview();
     }
@@ -644,10 +645,13 @@ public partial class HomePage : INotifyPropertyChanged
     protected virtual void OnPropertyChanged([CallerMemberName] string? propertyName = null)
     {
         PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-        if (propertyName != null)
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs($"Is{propertyName}Default"));
+
+        if (propertyName == null) return;
+
+        PropertyChanged?.Invoke(this, new PropertyChangedEventArgs($"Is{propertyName}Default"));
+        MainWindow.IsHomePageModified = IsModified;
     }
-    
+
     public bool IsLanguageDefault => SelectedLanguage == DefaultLanguage;
     public bool IsConfigVersionDefault => ConfigVersion == DefaultConfigVersion;
     public bool IsCheckUpdateDefault => CheckUpdate == DefaultCheckUpdate;
@@ -740,4 +744,41 @@ public partial class HomePage : INotifyPropertyChanged
             remove { }
         }
     }
+
+    public bool IsModified => !IsLanguageDefault ||
+                              !IsConfigVersionDefault ||
+                              !IsCheckUpdateDefault ||
+                              !IsOpNotifyDefault ||
+                              !IsSendMetricsDefault ||
+                              !IsDebugDefault ||
+                              !IsUseUuidDefault ||
+                              !IsDatabaseMethodDefault ||
+                              !IsJsonFilePathDefault ||
+                              !IsSqlHostDefault ||
+                              !IsSqlPortDefault ||
+                              !IsSqlUserDefault ||
+                              !IsSqlPasswordDefault ||
+                              !IsSqlDatabaseDefault ||
+                              !IsSqlTableDefault ||
+                              !IsVanillaTraceDefault ||
+                              !IsDefaultTraceGroupDefault ||
+                              !IsAutoResetTraceDefault ||
+                              !IsTeamEnableDefault ||
+                              !IsTeamPluginDefault ||
+                              !IsTeamSourceDefault ||
+                              !IsTeamFormulaDefault ||
+                              !IsTeamLeaderWeightDefault ||
+                              !IsTeamMemberWeightDefault ||
+                              !IsAttributeEnableDefault ||
+                              !IsAttributePluginDefault ||
+                              !IsAttributeNameDefault ||
+                              !IsAttributeFormulaDefault ||
+                              !IsAttributeSourceDefault ||
+                              !IsPlaceholderPrefixDefault ||
+                              !IsLevelBarEmptyDefault ||
+                              !IsLevelBarFullDefault ||
+                              !IsLevelBarLengthDefault ||
+                              !IsExpBarEmptyDefault ||
+                              !IsExpBarFullDefault ||
+                              !IsExpBarLengthDefault;
 }
