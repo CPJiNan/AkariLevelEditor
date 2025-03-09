@@ -10,9 +10,9 @@ using AkariLevelEditor.Configuration.File;
 
 namespace AkariLevelEditor.Pages;
 
-public partial class HomePage : INotifyPropertyChanged
+public partial class OptionsPage : INotifyPropertyChanged
 {
-    public HomePage()
+    public OptionsPage()
     {
         InitializeComponent();
 
@@ -20,42 +20,42 @@ public partial class HomePage : INotifyPropertyChanged
         UpdatePreview();
     }
 
-    private static string _defaultLanguage = "zh_CN";
-    private static int _defaultConfigVersion = 6;
-    private static bool _defaultCheckUpdate = true;
-    private static bool _defaultOpNotify = true;
-    private static bool _defaultSendMetrics = true;
-    private static bool _defaultDebug;
-    private static bool _defaultUseUuid;
-    private static string _defaultDatabaseMethod = "JSON";
-    private static string _defaultJsonFilePath = "database.json";
-    private static string _defaultSqlHost = "localhost";
-    private static int _defaultSqlPort = 3306;
-    private static string _defaultSqlUser = "root";
-    private static string _defaultSqlPassword = "password";
-    private static string _defaultSqlDatabase = "minecraft";
-    private static string _defaultSqlTable = "akarilevel";
-    private static bool _defaultVanillaTrace;
-    private static string _defaultDefaultTraceGroup = "";
-    private static bool _defaultAutoResetTrace = true;
-    private static bool _defaultTeamEnable;
-    private static string _defaultTeamPlugin = "DungeonPlus";
-    private static string _defaultTeamSource = "MYTHICMOBS_DROP_EXP";
-    private static string _defaultTeamFormula = "%exp% * %size%";
-    private static int _defaultTeamLeaderWeight = 1;
-    private static int _defaultTeamMemberWeight = 1;
-    private static bool _defaultAttributeEnable;
-    private static string _defaultAttributePlugin = "AttributePlus";
-    private static string _defaultAttributeName = "经验加成";
-    private static string _defaultAttributeFormula = "%exp% * ( 1 + %attribute% / 100 )";
-    private static string _defaultAttributeSource = "MYTHICMOBS_DROP_EXP\nVANILLA_EXP_CHANGE";
-    private static string _defaultPlaceholderPrefix = "akarilevel";
-    private static string _defaultLevelBarEmpty = "□";
-    private static string _defaultLevelBarFull = "■";
-    private static int _defaultLevelBarLength = 10;
-    private static string _defaultExpBarEmpty = "□";
-    private static string _defaultExpBarFull = "■";
-    private static int _defaultExpBarLength = 10;
+    private string _defaultLanguage = "zh_CN";
+    private int _defaultConfigVersion = 6;
+    private bool _defaultCheckUpdate = true;
+    private bool _defaultOpNotify = true;
+    private bool _defaultSendMetrics = true;
+    private bool _defaultDebug;
+    private bool _defaultUseUuid;
+    private string _defaultDatabaseMethod = "JSON";
+    private string _defaultJsonFilePath = "database.json";
+    private string _defaultSqlHost = "localhost";
+    private int _defaultSqlPort = 3306;
+    private string _defaultSqlUser = "root";
+    private string _defaultSqlPassword = "password";
+    private string _defaultSqlDatabase = "minecraft";
+    private string _defaultSqlTable = "akarilevel";
+    private bool _defaultVanillaTrace;
+    private string _defaultDefaultTraceGroup = "";
+    private bool _defaultAutoResetTrace = true;
+    private bool _defaultTeamEnable;
+    private string _defaultTeamPlugin = "DungeonPlus";
+    private string _defaultTeamSource = "MYTHICMOBS_DROP_EXP";
+    private string _defaultTeamFormula = "%exp% * %size%";
+    private int _defaultTeamLeaderWeight = 1;
+    private int _defaultTeamMemberWeight = 1;
+    private bool _defaultAttributeEnable;
+    private string _defaultAttributePlugin = "AttributePlus";
+    private string _defaultAttributeName = "经验加成";
+    private string _defaultAttributeFormula = "%exp% * ( 1 + %attribute% / 100 )";
+    private string _defaultAttributeSource = "MYTHICMOBS_DROP_EXP\nVANILLA_EXP_CHANGE";
+    private string _defaultPlaceholderPrefix = "akarilevel";
+    private string _defaultLevelBarEmpty = "□";
+    private string _defaultLevelBarFull = "■";
+    private int _defaultLevelBarLength = 10;
+    private string _defaultExpBarEmpty = "□";
+    private string _defaultExpBarFull = "■";
+    private int _defaultExpBarLength = 10;
 
     private string _selectedLanguage = "zh_CN";
     private int _configVersion = 6;
@@ -666,7 +666,7 @@ public partial class HomePage : INotifyPropertyChanged
         if (propertyName == null) return;
 
         PropertyChanged?.Invoke(this, new PropertyChangedEventArgs($"Is{propertyName}Default"));
-        MainWindow.IsHomePageModified = IsModified;
+        MainWindow.IsOptionsPageModified = IsModified;
     }
 
     public bool IsLanguageDefault => SelectedLanguage == _defaultLanguage;

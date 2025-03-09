@@ -7,17 +7,17 @@ public partial class MainWindow
     public MainWindow()
     {
         InitializeComponent();
-        Loaded += (_, _) => RootNavigation.Navigate("主页");
-        RootNavigation.Navigating += OnNavigatingFromHomePage;
+        Loaded += (_, _) => RootNavigation.Navigate("配置");
+        RootNavigation.Navigating += OnNavigatingFromOptionsPage;
 
         AppLoader.Startup();
     }
 
-    public static bool IsHomePageModified = false;
+    public static bool IsOptionsPageModified = false;
 
-    private async void OnNavigatingFromHomePage(object sender, NavigatingCancelEventArgs e)
+    private async void OnNavigatingFromOptionsPage(object sender, NavigatingCancelEventArgs e)
     {
-        if (RootNavigation.SelectedItem?.TargetPageTag != "主页" || !IsHomePageModified) return;
+        if (RootNavigation.SelectedItem?.TargetPageTag != "配置" || !IsOptionsPageModified) return;
 
         var dialog = new MessageBox
         {
