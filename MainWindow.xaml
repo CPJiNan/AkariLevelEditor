@@ -35,6 +35,12 @@
                     </ui:NavigationViewItem.Icon>
                 </ui:NavigationViewItem>
 
+                <ui:NavigationViewItem Content="等级组" TargetPageType="{x:Type pages:LevelGroupPage}">
+                    <ui:NavigationViewItem.Icon>
+                        <ui:SymbolIcon Symbol="Group24" />
+                    </ui:NavigationViewItem.Icon>
+                </ui:NavigationViewItem>
+
             </ui:NavigationView.MenuItems>
 
             <ui:NavigationView.FooterMenuItems>
