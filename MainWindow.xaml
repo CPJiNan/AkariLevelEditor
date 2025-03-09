@@ -31,7 +31,7 @@
 
                 <ui:NavigationViewItem Content="配置" TargetPageType="{x:Type pages:OptionsPage}">
                     <ui:NavigationViewItem.Icon>
-                        <ui:SymbolIcon Symbol="Home24" />
+                        <ui:SymbolIcon Symbol="Options24" />
                     </ui:NavigationViewItem.Icon>
                 </ui:NavigationViewItem>
 
