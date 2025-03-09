@@ -666,7 +666,7 @@ public partial class LevelGroupPage : INotifyPropertyChanged
         if (propertyName == null) return;
 
         PropertyChanged?.Invoke(this, new PropertyChangedEventArgs($"Is{propertyName}Default"));
-        MainWindow.IsOptionsPageModified = IsModified;
+        MainWindow.IsLevelGroupPageModified = IsModified;
     }
 
     public bool IsLanguageDefault => SelectedLanguage == _defaultLanguage;
